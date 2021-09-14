@@ -1,4 +1,6 @@
-# 環境設定
+# SOARS Samples ライブラリ
+
+## 環境設定
 
 Mavenがインストールされていなければ，まず，Mavenをインストールする．UbuntuなどのDebian系の場合は，aptでインストールできる．
 
@@ -33,3 +35,6 @@ Github-Account-Nameを自分のGitHubアカウント名，Github-Account-Token�
 </settings>
 
 ```
+
+## 履歴
+- 2021/09/14 [soars-d2j-work](https://github.com/soars-jp/soars-d2j-work)の2021/09/12版から分岐させて，リポジトリを作成した．
