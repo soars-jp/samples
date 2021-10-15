@@ -1,4 +1,4 @@
-package jp.soars.examples.sample01;
+package jp.soars.examples.sample03;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,10 +11,10 @@ import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
 
 /**
- * メインクラス． シミュレーションステップ：60分 シミュレーション期間：７日間
+ * デバッグ用ルールロガー出力ありのメインクラス． シミュレーションステップ：60分 シミュレーション期間：７日間
  * シナリオ：３人の父親エージェントが，毎日，9時に自宅を出発して会社に行き，17時に会社を出発して自宅に戻る．
  */
-public class TMain {
+public class TMainWithRuleLog {
 
     /**
      * メインメソッド．
@@ -28,6 +28,7 @@ public class TMain {
         int interval = 60; // １ステップの分数
         long seed = 0; // 乱数シード
         TModel model = new TModel(stages, interval, seed);
+        model.beginRuleLogger("logs/sample02/ruleAction.csv"); // ルールの登録／発火／削除を記録するためのロガー（ルールロガー）を開始．
         // スポットの初期化
         int noOfHomes = 3; // 家の数
         TSpotManager spotManager = model.getSpotManager(); // スポット管理
@@ -54,6 +55,7 @@ public class TMain {
             }
             System.out.println();
         }
+        model.endRuleLogger(); // ルールロガーを終了する．
     }
 
 }

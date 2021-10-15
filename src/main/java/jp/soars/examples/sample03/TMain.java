@@ -1,4 +1,4 @@
-package jp.soars.examples.sample01;
+package jp.soars.examples.sample03;
 
 import java.io.IOException;
 import java.util.ArrayList;
