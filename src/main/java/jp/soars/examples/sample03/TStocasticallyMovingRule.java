@@ -31,9 +31,13 @@ public class TStocasticallyMovingRule extends TAgentRule {
     /**
      * コンストラクタ． 絶対時刻を指定する．
      * 
+     * @param ruleName
      * @param ownerRole       このルールをもつ役割
      * @param sourceSpot      出発地
      * @param destinationSpot 目的地
+     * @param timeToNextRule  次のルールを実行するまでの時間
+     * @param stageOfNextRule 次のルールを実行するステージ
+     * @param nextRule        次に実行するルール名
      * @param probability     移動確率
      */
     public TStocasticallyMovingRule(String ruleName, TRole ownerRole, String sourceSpot, String destinationSpot,
@@ -53,7 +57,7 @@ public class TStocasticallyMovingRule extends TAgentRule {
         if (isAt(fSource) && getRandom().nextDouble() <= fProbability) { // スポット条件および移動確率条件が満たされたら，
             moveTo(spotSet.get(fDestination)); // 目的地へ移動する．
             if (fNextRule != null) {
-                int day = currentTime.getDay();
+                int day = currentTime.getDay();// 次のルールを実行する日付
                 int hour = currentTime.getHour() + fTimeToNextRule; // 次のルールを実行する時間
                 int minute = currentTime.getMinute(); // 次のルールを実行する分
                 getRule(fNextRule).setTimeAndStage(day, hour, minute, fStageOfNextRule); // 臨時実行ルールとして予約

@@ -13,6 +13,12 @@ public class TChildRole extends TRole {
     /** 家に帰る */
     public static final String RETURN_HOME = "return_home";
 
+    /**
+     * コンストラクタ
+     * 
+     * @param ownerAgent この役割を持つエージェント
+     * @param home       自宅
+     */
     public TChildRole(TAgent ownerAgent, String home) {
         super(ROLE_NAME, ownerAgent); // 親クラスのコンストラクタを呼び出す
         // 自宅にいるなら学校に移動する

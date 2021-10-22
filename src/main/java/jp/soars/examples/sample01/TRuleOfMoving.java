@@ -21,9 +21,10 @@ public class TRuleOfMoving extends TAgentRule {
 
     /**
      * コンストラクタ．
-     * @param ruleName このルールの名前
-     * @param ownerRole このルールをもつ役割
-     * @param sourceSpot 出発地
+     * 
+     * @param ruleName        このルールの名前
+     * @param ownerRole       このルールをもつ役割
+     * @param sourceSpot      出発地
      * @param destinationSpot 目的地
      */
     public TRuleOfMoving(String ruleName, TRole ownerRole, String sourceSpot, String destinationSpot) {
@@ -33,8 +34,8 @@ public class TRuleOfMoving extends TAgentRule {
     }
 
     @Override
-    public void doIt(TTime currentTime, String stage, HashMap<String, TSpot> spotSet,
-                        HashMap<String, TAgent> agentSet, HashMap<String, Object> globalSharedVariables) {
+    public void doIt(TTime currentTime, String stage, HashMap<String, TSpot> spotSet, HashMap<String, TAgent> agentSet,
+            HashMap<String, Object> globalSharedVariables) {
         if (isAt(fSource)) { // スポット条件が満たされたら，
             moveTo(spotSet.get(fDestination)); // 目的地へ移動する．
         }

@@ -1,13 +1,13 @@
 # サンプル１：最も簡単なプログラム
 
-#### サンプルプログラムの実行
+## サンプルプログラムの実行
 
-サンプル1のプログラムは，soars2.examples.sample01パッケージにある．実行方法は，以下の通りである．
+サンプル1のプログラムは，soars.examples.sample01パッケージにある．実行方法は，以下の通りである．
 
-    java soars2.examples.sample01.TMain
+    java soars.examples.sample01.TMain
 
 
-#### シナリオとシミュレーション条件
+## シナリオとシミュレーション条件
 
 以下のシナリオを考える．
 - 3人の父親(father1, father2, father3)は，それぞれ自宅(home1, home2, home3)を持つ．
@@ -19,7 +19,7 @@
 - 終了時刻：6日23:00
 - 時間ステップ：1時間
 
-#### スポットタイプの定義
+## スポットタイプの定義
 
 スポットタイプとして，homeとcompanyを定義する．
 
@@ -34,7 +34,7 @@ public class TSpotTypes {
 }
 ```
 
-#### エージェントタイプの定義
+## エージェントタイプの定義
 
 エージェントタイプとして，fatherを考える．
 
@@ -47,7 +47,7 @@ public class TAgentTypes {
 }
 ```
 
-#### ステージの定義
+## ステージの定義
 
 ステージとして，エージェント移動ステージAgentMovingを定義する．
 
@@ -60,7 +60,7 @@ public class TStages {
 }
 ```
 
-#### ルールと役割の定義
+## ルールと役割の定義
 
 ルールとしては，soar2.coreパッケージで定義されているルールクラス（TAgentRule）を継承することにより，移動ルールクラス（TRuleOfMoving）を定義する．
 移動ルールは，出発地にいるのであれば，目的地に移動するルールである．
@@ -74,58 +74,46 @@ leave_homeルールは毎日9時のAgentMovingステージに実行されるよ�
 `TRuleOfMoving.java`
 
 ```java
-package soars2.examples.sample01;
-
-import java.util.HashMap;
-
-import soars2.core.TAgent;
-import soars2.core.TAgentRule;
-import soars2.core.TRole;
-import soars2.core.TSpot;
-import soars2.core.TTime;
-
 /**
- * 家を出発するルール．
+ * 移動ルール．
  */
 public class TRuleOfMoving extends TAgentRule {
+
+    /** 出発地 */
+    private String fSource;
 
     /** 目的地 */
     private String fDestination;
 
     /**
      * コンストラクタ．
-     * @param ruleName このルールの名前
-     * @param ownerRole このルールをもつ役割
-     * @param sourceSpot 出発地
+     * 
+     * @param ruleName        このルールの名前
+     * @param ownerRole       このルールをもつ役割
+     * @param sourceSpot      出発地
      * @param destinationSpot 目的地
      */
     public TRuleOfMoving(String ruleName, TRole ownerRole, String sourceSpot, String destinationSpot) {
-        super(ruleName, ownerRole, sourceSpot);
+        super(ruleName, ownerRole);
+        fSource = sourceSpot;
         fDestination = destinationSpot;
     }
 
     @Override
-    public boolean doIt(TTime currentTime, String stage, HashMap<String, TSpot> spotSet,
-                        HashMap<String, TAgent> agentSet, HashMap<String, Object> globalSharedVariables) {
-        if (meetSpotCondition()) { // スポット条件が満たされたら，
+    public void doIt(TTime currentTime, String stage, HashMap<String, TSpot> spotSet, HashMap<String, TAgent> agentSet,
+            HashMap<String, Object> globalSharedVariables) {
+        if (isAt(fSource)) { // スポット条件が満たされたら，
             moveTo(spotSet.get(fDestination)); // 目的地へ移動する．
-            return true;
         }
-        return false;
     }
 
 }
+
 ```
 
 `TFatherRole.java`
 
 ```java
-package soars2.examples.sample01;
-
-import soars2.core.TAgent;
-import soars2.core.TRole;
-import soars2.utils.random2013.ICRandom;
-
 /**
  * 父親役割．
  * 9時に会社に出社して，その8時間後に帰宅する．
@@ -144,11 +132,10 @@ public class TFatherRole extends TRole {
     /**
      * コンストラクタ
      * @param ownerAgent この役割を持つエージェント
-     * @param rand 乱数発生器
      * @param home 自宅
      */
-    public TFatherRole(TAgent ownerAgent, ICRandom rand, String home) {
-        super(ROLE_NAME, ownerAgent, rand); //親クラスのコンストラクタを呼び出す．
+    public TFatherRole(TAgent ownerAgent, String home) {
+        super(ROLE_NAME, ownerAgent); //親クラスのコンストラクタを呼び出す．
         //自宅にいるならば，会社に移動する．
         registerRule(new TRuleOfMoving(LEAVE_HOME, this, home, TSpotTypes.COMPANY));
         //会社にいるならば，自宅に移動する．
@@ -229,45 +216,52 @@ public boolean setTimeAndStage(int hour, int minute, String stage)
 `TMain.java`
 
 ```java
+/**
+ * メインクラス． シミュレーションステップ：60分 シミュレーション期間：７日間
+ * シナリオ：３人の父親エージェントが，毎日，9時に自宅を出発して会社に行き，17時に会社を出発して自宅に戻る．
+ */
 public class TMain {
+
     /**
      * メインメソッド．
+     * 
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-    	//ステージの初期化
-        List<String> stages = List.of(TStages.AGENT_MOVING); //ステージは，エージェント移動のみ．
-        //モデルの生成
-        int interval = 60; //１ステップの分数
-        long seed = 0; //乱数シード
+        // ステージの初期化
+        List<String> stages = List.of(TStages.AGENT_MOVING); // ステージは，エージェント移動のみ．
+        // モデルの生成
+        int interval = 60; // １ステップの分数
+        long seed = 0; // 乱数シード
         TModel model = new TModel(stages, interval, seed);
-        //スポットの初期化
-        int noOfHomes = 3; //家の数        
-        TSpotManager spotManager = model.getSpotManager(); //スポット管理
-        spotManager.createSpots(TSpotTypes.HOME, noOfHomes); //noOfHomes個の家スポットを生成する．名前は，home1, home2, ...となる．
-        spotManager.createSpot(TSpotTypes.COMPANY); //1個の会社スポットを生成する，名前は，company (=TSpots.COMPANY)となる．
-        //エージェントの初期化
-        TAgentManager agentManager = model.getAgentManager(); //エージェント管理
-        ICRandom random = model.getRandom(); //乱数発生器
-        ArrayList<TAgent> fathers = agentManager.createAgents(TAgentTypes.FATHER, noOfHomes); //noOfHomes体の父親エージェントを生成する．名前は，father1, father2, ...となる．
+        // スポットの初期化
+        int noOfHomes = 3; // 家の数
+        TSpotManager spotManager = model.getSpotManager(); // スポット管理
+        spotManager.createSpots(TSpotTypes.HOME, noOfHomes); // noOfHomes個の家スポットを生成する．名前は，home1, home2, ...となる．
+        spotManager.createSpot(TSpotTypes.COMPANY); // 1個の会社スポットを生成する，名前は，company (=TSpots.COMPANY)となる．
+        // エージェントの初期化
+        TAgentManager agentManager = model.getAgentManager(); // エージェント管理
+        ArrayList<TAgent> fathers = agentManager.createAgents(TAgentTypes.FATHER, noOfHomes); // noOfHomes体の父親エージェントを生成する．名前は，father1,
+                                                                                              // father2, ...となる．
         for (int i = 0; i < fathers.size(); ++i) {
-            TAgent father = fathers.get(i); //i番目のエージェントを取り出す．
-            String home = TSpotTypes.HOME + (i + 1); //i番目のエージェントの自宅のスポット名を生成する．
-            TFatherRole fatherRole = new TFatherRole(father, random, home); //父親役割を生成する．
-            father.setBaseRole(fatherRole); //父親役割を基本役割に設定する．
-            father.initializeCurrentSpot(spotManager.getSpotDB().get(home)); //初期位置を自宅に設定する．
+            TAgent father = fathers.get(i); // i番目のエージェントを取り出す．
+            String home = TSpotTypes.HOME + (i + 1); // i番目のエージェントの自宅のスポット名を生成する．
+            TFatherRole fatherRole = new TFatherRole(father, home); // 父親役割を生成する．
+            father.activateRole(fatherRole.getName()); // 父親役割をアクティブ化する．
+            father.initializeCurrentSpot(spotManager.getSpotDB().get(home)); // 初期位置を自宅に設定する．
         }
-        //メインループ： 0日0時0分から6日23時まで1時間単位でまわす．
-        TTime simulationPeriod = new TTime("7/0:00"); //シミュレーション終了時刻
+        // メインループ： 0日0時0分から6日23時まで1時間単位でまわす．
+        TTime simulationPeriod = new TTime("7/0:00"); // シミュレーション終了時刻
         while (model.getTime().isLessThan(simulationPeriod)) {
-            System.out.print(model.getTime() + "\t"); //時刻を表示する．
-            model.execute(); //モデルの実行
-            for (TAgent a: fathers) {
-                System.out.print(a.getCurrentSpotName() + "\t"); //各エージェントが位置しているスポット名を表示する．
+            System.out.print(model.getTime() + "\t"); // 時刻を表示する．
+            model.execute(); // モデルの実行
+            for (TAgent a : fathers) {
+                System.out.print(a.getCurrentSpotName() + "\t"); // 各エージェントが位置しているスポット名を表示する．
             }
             System.out.println();
-        }        
-    }   
+        }
+    }
+
 }
 ```
 

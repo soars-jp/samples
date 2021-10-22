@@ -21,10 +21,10 @@ public class TDeterminingHealthRule extends TAgentRule {
     /**
      * コンストラクタ
      * 
-     * @param ruleName
-     * @param ownerRole
-     * @param spot
-     * @param probabilityToBeSick
+     * @param ruleName            このルールの名前
+     * @param ownerRole           このルールを持つ役割
+     * @param spot                発火スポット
+     * @param probabilityToBeSick 病気になる確率
      */
     public TDeterminingHealthRule(String ruleName, TRole ownerRole, String spot, double probabilityToBeSick) {
         super(ruleName, ownerRole);
@@ -33,6 +33,11 @@ public class TDeterminingHealthRule extends TAgentRule {
         fProbability = probabilityToBeSick;
     }
 
+    /**
+     * 病気か否かを返す．
+     * 
+     * @return true:病気である，false:病気でない
+     */
     public boolean isSick() {
         return fSick;
     }
@@ -42,8 +47,8 @@ public class TDeterminingHealthRule extends TAgentRule {
             HashMap<String, Object> globalSharedVariables) {
         if (isAt(fSpot)) {
             if (getRandom().nextDouble() <= fProbability) { // スポット条件および移動確率条件が満たされたら，
-                fSick = true;
-                getAgent().activateRole("SickPersonRole");
+                fSick = true;// 病気になる
+                getAgent().activateRole("SickPersonRole");// 役割を病人役割に変更する
             } else {
                 fSick = false;
             }
