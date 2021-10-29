@@ -135,7 +135,7 @@ public class TDeterminingHealthRule extends TAgentRule {
     }
 
     @Override
-    public void doIt(TTime currentTime, String stage, HashMap<String, TSpot> spotSet, HashMap<String, TAgent> agentSet,
+    public void doIt(TTime currentTime, String stage, TSpotManager spotManager, TAgentManager agentManager,
             HashMap<String, Object> globalSharedVariables) {
         if (isAt(fSpot)) {
             if (getRandom().nextDouble() <= fProbability) { // スポット条件および移動確率条件が満たされたら，
@@ -172,7 +172,6 @@ public class TRecoveringFromSickRule extends TAgentRule {
      * @param ownerRole このルールをもつ役割
      * @param hospital  病院
      * @param home      自宅
-     * @param backRole  回復後に設定する役割
      */
     public TRecoveringFromSickRule(String ruleName, TRole ownerRole, String hospital, String home, String backRole) {
         super(ruleName, ownerRole);
@@ -182,10 +181,10 @@ public class TRecoveringFromSickRule extends TAgentRule {
     }
 
     @Override
-    public void doIt(TTime currentTime, String stage, HashMap<String, TSpot> spotSet, HashMap<String, TAgent> agentSet,
+    public void doIt(TTime currentTime, String stage, TSpotManager spotManager, TAgentManager agentManager,
             HashMap<String, Object> globalSharedVariables) {
         if (isAt(fHospital)) { // 病院にいるなら
-            moveTo(spotSet.get(fHome)); // 家に戻って．
+            moveTo(spotManager.getSpotDB().get(fHome)); // 家に戻って．
             TAgent agent = getAgent();
             agent.activateRole(fBackRole);// 役割をもどす
         }

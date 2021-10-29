@@ -3,9 +3,11 @@ package jp.soars.examples.sample04;
 import java.util.HashMap;
 
 import jp.soars.core.TAgent;
+import jp.soars.core.TAgentManager;
 import jp.soars.core.TAgentRule;
 import jp.soars.core.TRole;
 import jp.soars.core.TSpot;
+import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
 
 public class TDeterminingHealthRule extends TAgentRule {
@@ -43,7 +45,7 @@ public class TDeterminingHealthRule extends TAgentRule {
     }
 
     @Override
-    public void doIt(TTime currentTime, String stage, HashMap<String, TSpot> spotSet, HashMap<String, TAgent> agentSet,
+    public void doIt(TTime currentTime, String stage, TSpotManager spotManager, TAgentManager agentManager,
             HashMap<String, Object> globalSharedVariables) {
         if (isAt(fSpot)) {
             if (getRandom().nextDouble() <= fProbability) { // スポット条件および移動確率条件が満たされたら，

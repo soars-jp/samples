@@ -116,17 +116,17 @@ public class TRandomlyMovingRule extends TAgentRule {
     }
 
     @Override
-    public void doIt(TTime currentTime, String currentStage, HashMap<String, TSpot> spotSet,
-            HashMap<String, TAgent> agentSet, HashMap<String, Object> globalSharedVariables) {
+    public void doIt(TTime currentTime, String currentStage, TSpotManager spotManager, TAgentManager agentManager,
+            HashMap<String, Object> globalSharedVariables) {
 
         if (isAt(fSpot)) { // スポット条件が満たされたら
             if (currentTime.isEqualTo(fEndTime)) {// 終了時刻ならば
-                moveTo(spotSet.get(fHomeSpot));// ホームスポットへ移動する
+                moveTo(spotManager.getSpotDB().get(fHomeSpot));// ホームスポットへ移動する
             } else {
                 ICRandom rand = getOwnerRole().getRandom();
                 String destination = fSpotList.get(rand.nextInt(fSpotList.size())).getName();
                 // ランダムに目的地を選択する
-                moveTo(spotSet.get(destination));
+                moveTo(spotManager.getSpotDB().get(destination));
                 // 目的地に移動する
                 TRandomlyMovingRule r = this;
                 // 自分が臨時実行ルールならば，次回実行するルールとして自分を使い回す．

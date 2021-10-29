@@ -3,9 +3,11 @@ package jp.soars.examples.sample04;
 import java.util.HashMap;
 
 import jp.soars.core.TAgent;
+import jp.soars.core.TAgentManager;
 import jp.soars.core.TAgentRule;
 import jp.soars.core.TRole;
 import jp.soars.core.TSpot;
+import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
 
 public class TRecoveringFromSickRule extends TAgentRule {
@@ -34,10 +36,10 @@ public class TRecoveringFromSickRule extends TAgentRule {
     }
 
     @Override
-    public void doIt(TTime currentTime, String stage, HashMap<String, TSpot> spotSet, HashMap<String, TAgent> agentSet,
+    public void doIt(TTime currentTime, String stage, TSpotManager spotManager, TAgentManager agentManager,
             HashMap<String, Object> globalSharedVariables) {
         if (isAt(fHospital)) { // 病院にいるなら
-            moveTo(spotSet.get(fHome)); // 家に戻って．
+            moveTo(spotManager.getSpotDB().get(fHome)); // 家に戻って．
             TAgent agent = getAgent();
             agent.activateRole(fBackRole);// 役割をもどす
         }

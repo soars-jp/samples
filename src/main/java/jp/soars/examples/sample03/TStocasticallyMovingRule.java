@@ -3,9 +3,11 @@ package jp.soars.examples.sample03;
 import java.util.HashMap;
 
 import jp.soars.core.TAgent;
+import jp.soars.core.TAgentManager;
 import jp.soars.core.TAgentRule;
 import jp.soars.core.TRole;
 import jp.soars.core.TSpot;
+import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
 
 public class TStocasticallyMovingRule extends TAgentRule {
@@ -52,10 +54,10 @@ public class TStocasticallyMovingRule extends TAgentRule {
     }
 
     @Override
-    public void doIt(TTime currentTime, String stage, HashMap<String, TSpot> spotSet, HashMap<String, TAgent> agentSet,
+    public void doIt(TTime currentTime, String stage, TSpotManager spotManager, TAgentManager agentManager,
             HashMap<String, Object> globalSharedVariables) {
         if (isAt(fSource) && getRandom().nextDouble() <= fProbability) { // スポット条件および移動確率条件が満たされたら，
-            moveTo(spotSet.get(fDestination)); // 目的地へ移動する．
+            moveTo(spotManager.getSpotDB().get(fDestination)); // 目的地へ移動する．
             if (fNextRule != null) {
                 int day = currentTime.getDay();// 次のルールを実行する日付
                 int hour = currentTime.getHour() + fTimeToNextRule; // 次のルールを実行する時間

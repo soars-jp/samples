@@ -37,9 +37,6 @@ leave_homeルールは，自宅にいるならば，会社に移動し，32時�
 `TRuleOfMoving.java`
 
 ```java
-/**
- * 移動ルール．
- */
 public class TRuleOfMoving extends TAgentRule {
 
     /** 出発地 */
@@ -96,10 +93,10 @@ public class TRuleOfMoving extends TAgentRule {
     }
 
     @Override
-    public void doIt(TTime currentTime, String stage, HashMap<String, TSpot> spotSet, HashMap<String, TAgent> agentSet,
+    public void doIt(TTime currentTime, String stage, TSpotManager spotManager, TAgentManager agentManager,
             HashMap<String, Object> globalSharedVariables) {
         if (isAt(fSource)) { // 出発地にいたら，
-            moveTo(spotSet.get(fDestination)); // 目的地へ移動する．
+            moveTo(spotManager.getSpotDB().get(fDestination)); // 目的地へ移動する．
             if (fNextRule != null) { // 次に実行するルールが定義されていたら
                 int day = currentTime.getDay(); // 次のルールを実行する日
                 int hour = currentTime.getHour() + fTimeToNextRule; // 次のルールを実行する時間
