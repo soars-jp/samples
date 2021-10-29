@@ -23,7 +23,7 @@
     - 15時に学校から自宅に移動する．
 - 病人役割(TSickPersonRoleクラス)
     - 10時に自宅から病院(hospital)に移動する．
-    - 病院で2時間(父親の場合）または3時間(子供の場合)診察を受けた後，自宅に戻り，病気が治る（＝基本役割に戻る）．
+    - 病院で2時間(父親の場合）または3時間(子供の場合)診察を受けた後，自宅に戻り，病気が治る．
 
 共通役割は，父親エージェントと子供エージェントに共通するルールをもつ役割であり，父親役割，子供役割と共に用いられる．父親エージェントと子供エージェントは，それぞれ父親役割と子供役割と，病人役割を持つ．
 
@@ -33,7 +33,7 @@
     - 6時に自宅で25%の確率で病気になり，役割を病人役割に変更する．
 
 - 「病気から回復する」ルールクラス（TRecoveringFromSickRule）
-    - 「病院に移動する」ルールが発火後，診察時間が過ぎたら，病院から自宅に移動して，役割を基本役割に変更する．
+    - 「病院に移動する」ルールが発火後，診察時間が過ぎたら，病院から自宅に移動して，役割を戻す．
 
 健康状態決定ルールクラスを実行するステージとして，「健康状態決定ステージ（DeterminingHealth）」を新たに定義する．
 「病気から回復する」ルールは，病院から自宅への移動を伴うので，「エージェント移動ステージ（AgentMoving）」で実行することにする．
@@ -187,7 +187,7 @@ public class TRecoveringFromSickRule extends TAgentRule {
         if (isAt(fHospital)) { // 病院にいるなら
             moveTo(spotSet.get(fHome)); // 家に戻って．
             TAgent agent = getAgent();
-            agent.activateRole(fBackRole);// 役割を基本役割にもどす
+            agent.activateRole(fBackRole);// 役割をもどす
         }
         return;
     }
@@ -285,7 +285,7 @@ public class TSickPersonRole extends TRole {
         registerRule(new TRuleOfMoving(GO_HOSPITAL, this, home, TSpotTypes.HOSPITAL, medicTTime, TStages.AGENT_MOVING,
                 RECOVER));// 10時に自宅から病院に移動する
         registerRule(new TRecoveringFromSickRule(RECOVER, this, TSpotTypes.HOSPITAL, home, backRole));
-        // 病院に到着してから，時間が診察時間経過したら，自宅に戻って，役割を基本役割に戻す．
+        // 病院に到着してから，時間が診察時間経過したら，自宅に戻って，役割を戻す．
         getRule(GO_HOSPITAL).setTimeAndStage(10, 0, TStages.AGENT_MOVING);
     }
 }
@@ -331,7 +331,6 @@ public class TMain {
             // 父親役割を生成する．
             fatherRole.addChildRole(commonRole);// 共通役割を設定する．
             father.addRole(fatherRole);// 父親役割を設定する．
-            // father.setBaseRole(fatherRole);// 父親役割を基本役割に設定する．
             father.activateRole(fatherRole.getName());// 父親役割を有効にする
             TSickPersonRole sickPersonRole = new TSickPersonRole(father, TSpotTypes.HOME + (i + 1), 2,
                     fatherRole.getName());

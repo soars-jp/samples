@@ -25,7 +25,7 @@ public class TSickPersonRole extends TRole {
         registerRule(new TRuleOfMoving(GO_HOSPITAL, this, home, TSpotTypes.HOSPITAL, medicTTime, TStages.AGENT_MOVING,
                 RECOVER));// 10時に自宅から病院に移動する
         registerRule(new TRecoveringFromSickRule(RECOVER, this, TSpotTypes.HOSPITAL, home, backRole));
-        // 病院に到着してから，時間が診察時間経過したら，自宅に戻って，役割を基本役割に戻す．
+        // 病院に到着してから，時間が診察時間経過したら，自宅に戻って，役割を戻す．
         getRule(GO_HOSPITAL).setTimeAndStage(10, 0, TStages.AGENT_MOVING);
     }
 }

@@ -39,7 +39,7 @@ public class TRecoveringFromSickRule extends TAgentRule {
         if (isAt(fHospital)) { // 病院にいるなら
             moveTo(spotSet.get(fHome)); // 家に戻って．
             TAgent agent = getAgent();
-            agent.activateRole(fBackRole);// 役割を基本役割にもどす
+            agent.activateRole(fBackRole);// 役割をもどす
         }
         return;
     }

@@ -47,7 +47,6 @@ public class TMain {
             // 父親役割を生成する．
             fatherRole.addChildRole(commonRole);// 共通役割を設定する．
             father.addRole(fatherRole);// 父親役割を設定する．
-            // father.setBaseRole(fatherRole);// 父親役割を基本役割に設定する．
             father.activateRole(fatherRole.getName());// 父親役割を有効にする
             TSickPersonRole sickPersonRole = new TSickPersonRole(father, TSpotTypes.HOME + (i + 1), 2,
                     fatherRole.getName());
