@@ -40,9 +40,9 @@
 
 #### サンプルプログラムの実行
 
-サンプル4のプログラムは，soars2.examples.sample04パッケージにある．実行方法は，以下の通りである．
+サンプル4のプログラムは，jp.soars.examples.sample04パッケージにある．実行方法は，以下の通りである．
 
-    java soars.examples.sample04.TMain
+    java jp.soars.examples.sample04.TMain
 
 #### スポットタイプの定義
 

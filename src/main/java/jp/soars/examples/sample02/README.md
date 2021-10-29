@@ -4,9 +4,9 @@
 
 ## サンプルプログラムの実行
 
-サンプル2のプログラムは，soars.examples.sample02パッケージにある．実行方法は，以下の通りである．
+サンプル2のプログラムは，jp.soars.examples.sample02パッケージにある．実行方法は，以下の通りである．
 
-    java soars.examples.sample02.TMain
+    java jp.soars.examples.sample02.TMain
 
 
 ## シナリオとシミュレーション条件

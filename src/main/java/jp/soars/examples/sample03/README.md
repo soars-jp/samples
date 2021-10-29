@@ -4,9 +4,9 @@
 
 ## サンプルプログラムの実行
 
-サンプル3のプログラムは，soars.examples.sample03パッケージにある．実行方法は，以下の通りである．
+サンプル3のプログラムは，jp.soars.examples.sample03パッケージにある．実行方法は，以下の通りである．
 
-    java soars.examples.sample03.TMain
+    java jp.soars.examples.sample03.TMain
 
 
 ## シナリオとシミュレーション条件

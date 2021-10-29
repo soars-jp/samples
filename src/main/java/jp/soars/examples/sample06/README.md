@@ -4,9 +4,9 @@
 
 #### サンプルプログラムの実行
 
-サンプル6のプログラムは，soars.examples.sample06パッケージにある．実行方法は，以下の通りである．
+サンプル6のプログラムは，jp.soars.examples.sample06パッケージにある．実行方法は，以下の通りである．
 
-    java soars.examples.sample06.TMain
+    java jp.soars.examples.sample06.TMain
 
 
 #### シナリオとシミュレーション条件
