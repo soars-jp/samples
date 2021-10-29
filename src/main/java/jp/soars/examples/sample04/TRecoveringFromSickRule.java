@@ -15,6 +15,9 @@ public class TRecoveringFromSickRule extends TAgentRule {
     /** 自宅 */
     private String fHome;
 
+    /** 回復後に設定する役割 */
+    public static String fBackRole;
+
     /**
      * コンストラクタ
      * 
@@ -23,10 +26,11 @@ public class TRecoveringFromSickRule extends TAgentRule {
      * @param hospital  病院
      * @param home      自宅
      */
-    public TRecoveringFromSickRule(String ruleName, TRole ownerRole, String hospital, String home) {
+    public TRecoveringFromSickRule(String ruleName, TRole ownerRole, String hospital, String home, String backRole) {
         super(ruleName, ownerRole);
         fHome = home;
         fHospital = hospital;
+        fBackRole = backRole;
     }
 
     @Override
@@ -35,7 +39,7 @@ public class TRecoveringFromSickRule extends TAgentRule {
         if (isAt(fHospital)) { // 病院にいるなら
             moveTo(spotSet.get(fHome)); // 家に戻って．
             TAgent agent = getAgent();
-            agent.activateRole(agent.getBaseRole().getName());// 役割を基本役割にもどす
+            agent.activateRole(fBackRole);// 役割を基本役割にもどす
         }
         return;
     }

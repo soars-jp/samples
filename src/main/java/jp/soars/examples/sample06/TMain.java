@@ -66,7 +66,6 @@ public class TMain {
             TSpot initialSpot = spotList.get(rand.nextInt(spotList.size()));
             TAgentRole agentRole = new TAgentRole(agent, initialSpot, spotList);
             agent.addRole(agentRole);
-            agent.setBaseRole(agentRole);
             agent.activateRole(agentRole.getName());
             agent.initializeCurrentSpot(initialSpot);
         }

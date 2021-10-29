@@ -47,9 +47,10 @@ public class TMain {
             // 父親役割を生成する．
             fatherRole.addChildRole(commonRole);// 共通役割を設定する．
             father.addRole(fatherRole);// 父親役割を設定する．
-            father.setBaseRole(fatherRole);// 父親役割を基本役割に設定する．
+            // father.setBaseRole(fatherRole);// 父親役割を基本役割に設定する．
             father.activateRole(fatherRole.getName());// 父親役割を有効にする
-            TSickPersonRole sickPersonRole = new TSickPersonRole(father, TSpotTypes.HOME + (i + 1), 2);
+            TSickPersonRole sickPersonRole = new TSickPersonRole(father, TSpotTypes.HOME + (i + 1), 2,
+                    fatherRole.getName());
             // 病人役割を生成する．診察時間は2時間とする．
             father.addRole(sickPersonRole);
             // 病人役割を追加する．
@@ -76,9 +77,9 @@ public class TMain {
             // 子供役割を生成する．
             childRole.addChildRole(commonRole);// 共通役割を設定する．
             child.addRole(childRole);// 子供役割を設定する．
-            child.setBaseRole(childRole);// 子供役割を基本役割に設定する．
             child.activateRole(childRole.getName());// 子供役割を有効にする
-            TSickPersonRole sickPersonRole = new TSickPersonRole(child, TSpotTypes.HOME + (i + 1), 3);
+            TSickPersonRole sickPersonRole = new TSickPersonRole(child, TSpotTypes.HOME + (i + 1), 3,
+                    childRole.getName());
             // 病人役割を生成する．診察時間は3時間とする．
             child.addRole(sickPersonRole);
             // 病人役割を追加する．

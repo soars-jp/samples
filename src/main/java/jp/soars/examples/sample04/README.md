@@ -25,7 +25,7 @@
     - 10時に自宅から病院(hospital)に移動する．
     - 病院で2時間(父親の場合）または3時間(子供の場合)診察を受けた後，自宅に戻り，病気が治る（＝基本役割に戻る）．
 
-共通役割は，父親エージェントと子供エージェントに共通するルールをもつ役割であり，父親役割，子供役割に統合して用いられる．父親エージェントと子供エージェントは，それぞれ父親役割と子供役割を基本役割として持ち，病人役割を臨時役割として持つ．
+共通役割は，父親エージェントと子供エージェントに共通するルールをもつ役割であり，父親役割，子供役割と共に用いられる．父親エージェントと子供エージェントは，それぞれ父親役割と子供役割と，病人役割を持つ．
 
 共通役割と病人役割を定義するため，以下の2つの新しいルールを定義する．
 
@@ -150,7 +150,7 @@ public class TDeterminingHealthRule extends TAgentRule {
 }
 ```
 
-次に，「病気から回復する」ルールクラスを定義する．このクラスは，指定された時刻，ステージ，スポット条件を満たしたら，自宅に戻って，役割を基本役割に戻す．
+次に，「病気から回復する」ルールクラスを定義する．このクラスは，指定された時刻，ステージ，スポット条件を満たしたら，自宅に戻って，役割を戻す．
 
 `TRecoveringFromSickRule.java`
 
@@ -162,6 +162,9 @@ public class TRecoveringFromSickRule extends TAgentRule {
     /** 自宅 */
     private String fHome;
 
+    /** 回復後に設定する役割 */
+    public static String fBackRole;
+
     /**
      * コンストラクタ
      * 
@@ -169,11 +172,13 @@ public class TRecoveringFromSickRule extends TAgentRule {
      * @param ownerRole このルールをもつ役割
      * @param hospital  病院
      * @param home      自宅
+     * @param backRole  回復後に設定する役割
      */
-    public TRecoveringFromSickRule(String ruleName, TRole ownerRole, String hospital, String home) {
+    public TRecoveringFromSickRule(String ruleName, TRole ownerRole, String hospital, String home, String backRole) {
         super(ruleName, ownerRole);
         fHome = home;
         fHospital = hospital;
+        fBackRole = backRole;
     }
 
     @Override
@@ -182,7 +187,7 @@ public class TRecoveringFromSickRule extends TAgentRule {
         if (isAt(fHospital)) { // 病院にいるなら
             moveTo(spotSet.get(fHome)); // 家に戻って．
             TAgent agent = getAgent();
-            agent.activateRole(agent.getBaseRole().getName());// 役割を基本役割にもどす
+            agent.activateRole(fBackRole);// 役割を基本役割にもどす
         }
         return;
     }
@@ -253,7 +258,7 @@ public class TChildRole extends TRole {
 }
 ```
 
-病人役割（TSickPersonRole）は，10時に自宅から病院(hospital)に移動する．病院に移動したら，指定した時間の後，病院から自宅に戻り，役割を基本役割に変更する．
+病人役割（TSickPersonRole）は，10時に自宅から病院(hospital)に移動する．病院に移動したら，指定した時間の後，病院から自宅に戻り，役割を戻す．
 
 `TSickPersonRole.java`
 
@@ -273,12 +278,13 @@ public class TSickPersonRole extends TRole {
      * @param ownerAgent この役割を持つエージェント
      * @param home       自宅
      * @param medicTTime 診察時間
+     * @param backRole   回復後に設定する役割
      */
-    public TSickPersonRole(TAgent ownerAgent, String home, int medicTTime) {
+    public TSickPersonRole(TAgent ownerAgent, String home, int medicTTime, String backRole) {
         super(ROLE_NAME, ownerAgent); // 親クラスのコンストラクタを呼び出す．
         registerRule(new TRuleOfMoving(GO_HOSPITAL, this, home, TSpotTypes.HOSPITAL, medicTTime, TStages.AGENT_MOVING,
                 RECOVER));// 10時に自宅から病院に移動する
-        registerRule(new TRecoveringFromSickRule(RECOVER, this, TSpotTypes.HOSPITAL, home));
+        registerRule(new TRecoveringFromSickRule(RECOVER, this, TSpotTypes.HOSPITAL, home, backRole));
         // 病院に到着してから，時間が診察時間経過したら，自宅に戻って，役割を基本役割に戻す．
         getRule(GO_HOSPITAL).setTimeAndStage(10, 0, TStages.AGENT_MOVING);
     }
@@ -325,9 +331,10 @@ public class TMain {
             // 父親役割を生成する．
             fatherRole.addChildRole(commonRole);// 共通役割を設定する．
             father.addRole(fatherRole);// 父親役割を設定する．
-            father.setBaseRole(fatherRole);// 父親役割を基本役割に設定する．
+            // father.setBaseRole(fatherRole);// 父親役割を基本役割に設定する．
             father.activateRole(fatherRole.getName());// 父親役割を有効にする
-            TSickPersonRole sickPersonRole = new TSickPersonRole(father, TSpotTypes.HOME + (i + 1), 2);
+            TSickPersonRole sickPersonRole = new TSickPersonRole(father, TSpotTypes.HOME + (i + 1), 2,
+                    fatherRole.getName());
             // 病人役割を生成する．診察時間は2時間とする．
             father.addRole(sickPersonRole);
             // 病人役割を追加する．
@@ -354,9 +361,9 @@ public class TMain {
             // 子供役割を生成する．
             childRole.addChildRole(commonRole);// 共通役割を設定する．
             child.addRole(childRole);// 子供役割を設定する．
-            child.setBaseRole(childRole);// 子供役割を基本役割に設定する．
             child.activateRole(childRole.getName());// 子供役割を有効にする
-            TSickPersonRole sickPersonRole = new TSickPersonRole(child, TSpotTypes.HOME + (i + 1), 3);
+            TSickPersonRole sickPersonRole = new TSickPersonRole(child, TSpotTypes.HOME + (i + 1), 3,
+                    childRole.getName());
             // 病人役割を生成する．診察時間は3時間とする．
             child.addRole(sickPersonRole);
             // 病人役割を追加する．

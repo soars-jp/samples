@@ -64,7 +64,6 @@ public class TMain {
             TAgentRole agentRole = new TAgentRole(agent, initialSpot, spotList);
             // エージェント役割を生成する．
             agent.addRole(agentRole);// エージェント役割を設定する．
-            agent.setBaseRole(agentRole);// エージェント役割を基本役割に設定する．
             agent.activateRole(agentRole.getName());// エージェント役割を有効にする．
             agent.initializeCurrentSpot(initialSpot); // 初期位置を設定する．
         }
