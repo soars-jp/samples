@@ -1,4 +1,4 @@
-package jp.soars.examples.sample02;
+package jp.soars.examples.sample03;
 
 import java.util.HashMap;
 
@@ -81,4 +81,5 @@ public class TRuleOfMoving extends TAgentRule {
             }
         }
     }
+
 }
