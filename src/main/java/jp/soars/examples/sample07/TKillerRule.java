@@ -1,0 +1,52 @@
+package jp.soars.examples.sample07;
+
+import java.util.HashMap;
+import java.util.List;
+
+import jp.soars.core.TAgent;
+import jp.soars.core.TAgentManager;
+import jp.soars.core.TAgentRule;
+import jp.soars.core.TRole;
+import jp.soars.core.TSpot;
+import jp.soars.core.TSpotManager;
+import jp.soars.core.TTime;
+import jp.soars.utils.random.ICRandom;
+
+public class TKillerRule extends TAgentRule {
+
+    /** ルール名 */
+	public static String RULE_NAME = "KillerRule";
+
+    /** デバッグ情報として削除(しようとした)エージェント名とスポット名を出力する */
+    private String fSpotName = "";
+    private String fAgentName = "";
+
+    public TKillerRule(TRole ownerRole) {
+        super(RULE_NAME, ownerRole);
+    }
+
+    @Override
+    public void doIt(TTime currentTime, String currentStage, TSpotManager spotManager, 
+                     TAgentManager agentManager, HashMap<String, Object> globalSharedVariables){
+        ICRandom rand = getOwnerRole().getRandom();
+        //ダミースポットをランダムに１つ削除
+        List<TSpot> dummySpotList = (List<TSpot>) globalSharedVariables.get(TMain.DUMMY_SPOT_LIST);
+        TSpot spot = dummySpotList.get(rand.nextInt(dummySpotList.size()));
+        dummySpotList.remove(spot);
+        fSpotName = spot.getName();
+        if(spot.getAgents().isEmpty()){
+            spotManager.deleteSpot(spot); 
+        }
+        //ダミーエージェントをランダムに１つ削除
+        List<TAgent> dummyAgentList = (List<TAgent>) globalSharedVariables.get(TMain.DUMMY_AGENT_LIST);
+        TAgent agent = dummyAgentList.get(rand.nextInt(dummyAgentList.size()));
+        dummyAgentList.remove(agent);
+        agentManager.deleteAgent(agent);
+        fAgentName = agent.getName();
+    }
+
+    @Override
+    public String debugInfo(){
+        return "spot:" + fSpotName + " agent:" + fAgentName;
+    }
+}
