@@ -106,10 +106,6 @@ public class TCreatorRule extends TAgentRule {
         newAgent.initializeCurrentSpot(newHome);
         fSpotName = newSpot.getName();
         fAgentName = newAgent.getName();
-        List<TSpot> dummySpotList = (List<TSpot>) globalSharedVariables.get(TMain.DUMMY_SPOT_LIST);
-        dummySpotList.add(newSpot);
-        List<TAgent> dummyAgentList = (List<TAgent>) globalSharedVariables.get(TMain.DUMMY_AGENT_LIST);
-        dummyAgentList.add(newAgent);
         //スポット・エージェントの作成は定時実行できないので，次に発火する時刻を設定
         TTime nextTime = new TTime(currentTime).add("24:00"); //24時間後に実行されるように設定
         this.setTimeAndStage(false, nextTime, getStage());
@@ -148,15 +144,15 @@ public class TKillerRule extends TAgentRule {
                      TAgentManager agentManager, HashMap<String, Object> globalSharedVariables){
         ICRandom rand = getOwnerRole().getRandom();
         //ダミースポットをランダムに１つ削除
-        List<TSpot> dummySpotList = (List<TSpot>) globalSharedVariables.get(TMain.DUMMY_SPOT_LIST);
+        List<TSpot> dummySpotList = spotManager.getSpots(TSpotTypes.DUMMY_SPOT);
         TSpot spot = dummySpotList.get(rand.nextInt(dummySpotList.size()));
         dummySpotList.remove(spot);
         fSpotName = spot.getName();
-        if(spot.getAgents().isEmpty()){
+        if(spot.getAgents().isEmpty()){ //エージェントがいるスポットを消そうとするとエラー
             spotManager.deleteSpot(spot); 
         }
         //ダミーエージェントをランダムに１つ削除
-        List<TAgent> dummyAgentList = (List<TAgent>) globalSharedVariables.get(TMain.DUMMY_AGENT_LIST);
+        List<TAgent> dummyAgentList = agentManager.getAgents(TAgentTypes.DUMMY_AGENT);
         TAgent agent = dummyAgentList.get(rand.nextInt(dummyAgentList.size()));
         dummyAgentList.remove(agent);
         agentManager.deleteAgent(agent);
@@ -168,5 +164,4 @@ public class TKillerRule extends TAgentRule {
         return "spot:" + fSpotName + " agent:" + fAgentName;
     }
 }
-
 ```
