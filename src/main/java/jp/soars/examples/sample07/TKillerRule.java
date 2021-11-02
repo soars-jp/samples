@@ -30,15 +30,15 @@ public class TKillerRule extends TAgentRule {
                      TAgentManager agentManager, HashMap<String, Object> globalSharedVariables){
         ICRandom rand = getOwnerRole().getRandom();
         //ダミースポットをランダムに１つ削除
-        List<TSpot> dummySpotList = (List<TSpot>) globalSharedVariables.get(TMain.DUMMY_SPOT_LIST);
+        List<TSpot> dummySpotList = spotManager.getSpots(TSpotTypes.DUMMY_SPOT);
         TSpot spot = dummySpotList.get(rand.nextInt(dummySpotList.size()));
         dummySpotList.remove(spot);
         fSpotName = spot.getName();
-        if(spot.getAgents().isEmpty()){
+        if(spot.getAgents().isEmpty()){ //エージェントがいるスポットを消そうとするとエラー
             spotManager.deleteSpot(spot); 
         }
         //ダミーエージェントをランダムに１つ削除
-        List<TAgent> dummyAgentList = (List<TAgent>) globalSharedVariables.get(TMain.DUMMY_AGENT_LIST);
+        List<TAgent> dummyAgentList = agentManager.getAgents(TAgentTypes.DUMMY_AGENT);
         TAgent agent = dummyAgentList.get(rand.nextInt(dummyAgentList.size()));
         dummyAgentList.remove(agent);
         agentManager.deleteAgent(agent);

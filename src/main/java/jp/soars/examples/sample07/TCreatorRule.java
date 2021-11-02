@@ -1,7 +1,6 @@
 package jp.soars.examples.sample07;
 
 import java.util.HashMap;
-import java.util.List;
 
 import jp.soars.core.TAgent;
 import jp.soars.core.TAgentManager;
@@ -33,10 +32,6 @@ public class TCreatorRule extends TAgentRule {
         newAgent.initializeCurrentSpot(newHome);
         fSpotName = newSpot.getName();
         fAgentName = newAgent.getName();
-        List<TSpot> dummySpotList = (List<TSpot>) globalSharedVariables.get(TMain.DUMMY_SPOT_LIST);
-        dummySpotList.add(newSpot);
-        List<TAgent> dummyAgentList = (List<TAgent>) globalSharedVariables.get(TMain.DUMMY_AGENT_LIST);
-        dummyAgentList.add(newAgent);
         //スポット・エージェントの作成は定時実行できないので，次に発火する時刻を設定
         TTime nextTime = new TTime(currentTime).add("24:00"); //24時間後に実行されるように設定
         this.setTimeAndStage(false, nextTime, getStage());

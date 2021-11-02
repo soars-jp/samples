@@ -3,7 +3,6 @@ package jp.soars.examples.sample07;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
 import jp.soars.core.TAgent;
@@ -19,18 +18,13 @@ import jp.soars.core.TTime;
  * シミュレーション時間：3日間
  */
 public class TMain {
-
-    /** グローバル共有情報名 */
-    public static final String DUMMY_SPOT_LIST = "dummySpotList";
-    public static final String DUMMY_AGENT_LIST = "dummyAgentList";
-
     /**
      * メインメソッド
      * @throws IOException
      */
     public static void main(String[] args) throws IOException{
         //ステージの初期化
-        List<String> stages = List.of(TStages.DYNAMIC_REMOVAL, TStages.DYNAMIC_ADDITION);
+        List<String> stages = List.of(TStages.DYNAMIC_ADDITION, TStages.DYNAMIC_REMOVAL);
         //モデルの生成
         int interval = 60;
         long seed = 0;
@@ -61,18 +55,15 @@ public class TMain {
             agent.activateRole(role.getName());
             agent.initializeCurrentSpot(spotManager.getSpotDB().get(home));
         }
-        //グローバル共有情報(ダミーからランダムに選んで削除したいのでリストを作成して共有する)
-        HashMap<String, Object> globalSharedVariableSet = model.getGlobalSharedVariableSet();
+        //ダミーを最初にいくつか生成しておく
         int noOfDummies = 5;
-        List<TSpot> dummySpotList = spotManager.createSpots(TSpotTypes.DUMMY_SPOT, noOfDummies);
+        spotManager.createSpots(TSpotTypes.DUMMY_SPOT, noOfDummies);
         List<TAgent> dummyAgentList = agentManager.createAgents(TAgentTypes.DUMMY_AGENT, noOfDummies);
         for(int i=0; i<noOfDummies; i++){
             TAgent agent = dummyAgentList.get(i);
             String home = TSpotTypes.HOME + (i+7);
             agent.initializeCurrentSpot(spotManager.getSpotDB().get(home));
         }
-        globalSharedVariableSet.put(DUMMY_SPOT_LIST, dummySpotList);
-        globalSharedVariableSet.put(DUMMY_AGENT_LIST, dummyAgentList);
         //ロギング開始設定
         Calendar cl = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
