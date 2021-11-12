@@ -7,7 +7,8 @@ import jp.soars.core.TAgentRule;
 import jp.soars.core.TRole;
 import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
-import jp.soars.core.train.TStation;
+import jp.soars.utils.transport.TGettingOnTransportRule;
+import jp.soars.utils.transport.TStation;
 
 /**
  * 移動ルール．
@@ -69,7 +70,7 @@ public class TRuleOfMovingStation extends TAgentRule {
             moveTo(spotManager.getSpotDB().get(fDestination)); // 目的地へ移動する．
             if (fNextRule != null) {
                 ((TStation) spotManager.getSpotDB().get(fDestination)).addRule(getAgent().getName(),
-                        (TAgentRule) getRule(fNextRule), fStageOfNextRule);
+                        (TGettingOnTransportRule) getRule(fNextRule), fStageOfNextRule);
             }
         }
     }
