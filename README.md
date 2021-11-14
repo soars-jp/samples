@@ -46,7 +46,7 @@ Github-Account-Nameを自分のGitHubアカウント名，Github-Account-Token�
 - [サンプル7：スポット・エージェントの動的追加・削除](./src/main/java/jp/soars/examples/sample07)
   
 ## 履歴
-- README.mdにsettings.xmlの設定情報を追加した．
+- 2021/11/14 README.mdにsettings.xmlの設定情報を追加した．
 - 2021/11/02 ライブラリの変更にともない，sample7を更新．
 - 2021/10/31 sample7を作成した．
 - 2021/10/29 sample1-6を作成した．
