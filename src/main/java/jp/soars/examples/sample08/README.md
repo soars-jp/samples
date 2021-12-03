@@ -57,7 +57,7 @@ line1線下り方面の列車(001と002)の運航スケジュールは以下の�
 
 #### 駅，路線，列車の運航スケジュール
 
-駅，路線，列車の運航スケジュールの情報は，transportDBディレクトリの下に収められている．ファイル，ディレクトリはそれぞれ以下のとおりである．
+駅，路線，列車の運航スケジュールの情報は，transportationDBディレクトリの下に収められている．ファイル，ディレクトリはそれぞれ以下のとおりである．
 - stations.csv  
 駅名
 - lines.csv  
@@ -79,7 +79,7 @@ line1線下り方面（outbound）方面の列車001, 002の運行スケジュ�
 
 #### スポットタイプの定義
 
-自宅（home)，会社（company）に加えて，移動中（-）を定義する．駅のスポット名は，上述のtransportDB/stations.csvにある駅名が用いられる．
+自宅（home)，会社（company）に加えて，移動中（-）を定義する．駅のスポット名は，上述のtransportationDB/stations.csvにある駅名が用いられる．
 ここで，移動中(-)は，自宅から駅に移動中，駅から会社に移動中，会社から駅に移動中，駅から自宅に移動中のすべてを表す抽象的なスポットとして定義している点に注意されたい．これは，スポット間をスポットとして区別しようとすると，本来のスポット数の2乗の数のスポット間を用意しなければならなくなるためである．
 
 `TSpotTypes.java`
@@ -110,49 +110,48 @@ public class TStages {
 }
 ```
 
-列車の運行に関するステージは，utils.transport.TTransportクラスで定義されている以下の4つのステージ（始発のスポット集合への登録，到着，出発，終着のスポット集合からの削除）を利用する．
+列車の運行に関するステージは，transportation.TTransportationクラスで定義されている以下の4つのステージ（始発のスポット集合への登録，到着，出発，終着のスポット集合からの削除）を利用する．
 
 ```java
-    /** 列車に関連するステージ */
-    public class TStages {
-        /** 始発のスポット集合への登録 */
-        public static final String NEW_TRANSPORT = "NewTransport";
-        /** 到着 */
-        public static final String TRANSPORT_ARRIVING = "TransportArraiving";
-        /** 出発 */
-        public static final String TRANSPORT_LEAVING = "TransportLeaving";
-        /** 終着のスポット集合からの削除 */
-        public static final String DELETING_TRANSPORT = "DeletingTransport";
-    }
+/** 乗り物に関連するステージ */
+public class TStages {
+    /** 始発のスポット集合への登録 */
+    public static final String NEW_TRANSPORTATION = "NewTransportation";
+    /** 到着 */
+    public static final String TRANSPORTATION_ARRIVING = "TransportationArraiving";
+    /** 出発 */
+    public static final String TRANSPORTATION_LEAVING = "TransportationLeaving";
+    /** 終着のスポット集合からの削除 */
+    public static final String DELETING_TRANSPORTATION = "DeletingTransportation";
+}
 ```
 
 ここでは，列車の乗降をエージェント移動ステージ（AgentMoving）で行うため，ステージの実行順序を，1) 始発のスポット集合への登録，2) 列車の到着，3) エージェントの移動，4) 列車の出発，5) 終着のスポット集合からの削除，とする．具体的には，TMainクラスのmainメソッドにおいて，以下のように宣言する．
 
 ```java
- List<String> stages = List.of(TTransport.TStages.NEW_TRANSPORT, TTransport.TStages.TRANSPORT_ARRIVING,
-                TStages.AGENT_MOVING, TTransport.TStages.TRANSPORT_LEAVING, TTransport.TStages.DELETING_TRANSPORT);
+List<String> stages = List.of(TTransportation.TStages.NEW_TRANSPORTATION,TTransportation.TStages.TRANSPORTATION_ARRIVING,TStages.AGENT_MOVING, TTransportation.TStages.TRANSPORTATION_LEAVING,TTransportation.TStages.DELETING_TRANSPORTATION);
 ```
 
 #### 役割の定義
 
-「列車に乗る」ルールとしてutils.transport.TGettingOnTransportRuleクラス，「列車から降りる」ルールとしてutils.transport.TGettingOffTransportRuleクラスが用意されているので，これらを利用して父親役割(TFatherRole)を定義する．
+「列車に乗る」ルールとしてtransportation.TGettingOnTransportationRuleクラス，「列車から降りる」ルールとしてtransportation.TGettingOffTransportationRuleクラスが用意されているので，これらを利用して父親役割(TFatherRole)を定義する．
 
-TGettingOnTransportRuleクラスのコンストラクタは以下の通りである．
+TGettingOnTransportationRuleクラスのコンストラクタは以下の通りである．
 
 ```java
-   public TGettingOnTransportRule(String ruleName, TRole ownerRole, String station, String line, String direction, String transportName)
+TGettingOnTransportationRule(String ruleName, TRole ownerRole, String station, String line, String direction, String transportationName) 
 ```
 ここで，引数ruleNameにはルール名，引数のownerRoleにはこのルールを持つ役割を指定する．
-引数のstationには乗車駅，lineには乗車路線，directionには乗車方面，transportNameには車両名を指定する．
+引数のstationには乗車駅，lineには乗車路線，directionには乗車方面，transportationNameには車両名を指定する．
 乗車時刻とステージは，setTimeAndStageメソッドで設定する．
-路線，駅，時刻，乗車方面，車両名は，transportDBディレクトリ下で定義されているものを指定する必要があることに注意されたい．
+路線，駅，時刻，乗車方面，車両名は，transportationDBディレクトリ下で定義されているものを指定する必要があることに注意されたい．
 
-TGettingOffTransportRuleクラスのコンストラクタは以下のとおりである．
+TGettingOffTransportationRuleクラスのコンストラクタは以下のとおりである．
 ```java
-    public TGettingOffTransportRule(String ruleName, TRole ownerRole, String station, String line, String direction, String transportName) 
+TGettingOffTransportationRule(String ruleName, TRole ownerRole, String station, String line,String direction,String transportationName)
 ```
 ここで，引数ruleNameにはルール名，引数のownerRoleにはこのルールを持つ役割を指定する．
-引数のstationには降車駅，lineには路線，directionには乗車方面，transportNameには車両名を指定する．
+引数のstationには降車駅，lineには路線，directionには乗車方面，transportationNameには車両名を指定する．
 下車時刻とステージは，setTimeAndStageメソッドで設定する．
 
 父親役割のソースコードを以下に示す．コンストラクタから，自宅から会社に列車で移動するルール群を生成するためのmoveFromHomeToCompanyメソッド，および，会社から自宅に列車で移動するルール群を生成するためのmoveFromCompanyToHomeメソッドを呼び出している．詳細は，ソースコード中のコメントを参照されたい．
@@ -160,6 +159,9 @@ TGettingOffTransportRuleクラスのコンストラクタは以下のとおり�
 `TFatherRole.java`
 
 ```java
+/**
+ * 父親役割
+ */
 public class TFatherRole extends TRole {
 
         /** 役割名 */
@@ -178,16 +180,16 @@ public class TFatherRole extends TRole {
         public static final String REACH_STATION_BACK = "reach_station_back";
 
         /** 電車に乗る（出勤） */
-        public static final String GETON_TRANSPORT = "geton_transport";
+        public static final String GETON_TRANSPORTATION = "geton_transportation";
 
         /** 電車に乗る（帰宅） */
-        public static final String GETON_TRANSPORT_BACK = "geton_transport_back";
+        public static final String GETON_TRANSPORTATION_BACK = "geton_transportation_back";
 
         /** 電車から降りる（出勤） */
-        public static final String GETOFF_TRANSPORT = "getoff_transport";
+        public static final String GETOFF_TRANSPORTATION = "getoff_transportation";
 
         /** 電車から降りる（帰宅） */
-        public static final String GETOFF_TRANSPORT_BACK = "getoff_transport_back";
+        public static final String GETOFF_TRANSPORTATION_BACK = "getoff_transportation_back";
 
         /** 駅から会社に向かう */
         public static final String GO_COMPANY = "go_company";
@@ -217,6 +219,9 @@ public class TFatherRole extends TRole {
                 moveFromCompanyToHome();
         }
 
+        /**
+         * 出勤
+         */
         private void moveFromHomeToCompany() {
                 String line = "line1"; // 乗車する列車の路線
                 String direction = "inbound"; // 乗車する列車の方面
@@ -230,13 +235,15 @@ public class TFatherRole extends TRole {
                 registerRule(new TRuleOfMoving(REACH_STATION, this, TSpotTypes.MIDWAY_SPOT, srcStation));
                 getRule(REACH_STATION).setTimeAndStage(7, 0, TStages.AGENT_MOVING);
                 // 7:05に電車にのる
-                registerRule(new TGettingOnTransportRule(GETON_TRANSPORT, this, srcStation, line, direction,
+                registerRule(new TGettingOnTransportationRule(GETON_TRANSPORTATION, this, srcStation, line,
+                                direction,
                                 trainName));
-                getRule(GETON_TRANSPORT).setTimeAndStage(7, 5, TStages.AGENT_MOVING);
+                getRule(GETON_TRANSPORTATION).setTimeAndStage(7, 5, TStages.AGENT_MOVING);
                 // 7:30に電車から降りる
-                registerRule(new TGettingOffTransportRule(GETOFF_TRANSPORT, this, dstStation, line, direction,
+                registerRule(new TGettingOffTransportationRule(GETOFF_TRANSPORTATION, this, dstStation, line,
+                                direction,
                                 trainName));
-                getRule(GETOFF_TRANSPORT).setTimeAndStage(7, 30, TStages.AGENT_MOVING);
+                getRule(GETOFF_TRANSPORTATION).setTimeAndStage(7, 30, TStages.AGENT_MOVING);
                 // 7:33に降車駅を出発して会社に向かう．
                 registerRule(new TRuleOfMoving(GO_COMPANY, this, dstStation, TSpotTypes.MIDWAY_SPOT));
                 getRule(GO_COMPANY).setTimeAndStage(7, 33, TStages.AGENT_MOVING);
@@ -245,6 +252,9 @@ public class TFatherRole extends TRole {
                 getRule(REACH_COMPANY).setTimeAndStage(7, 43, TStages.AGENT_MOVING);
         }
 
+        /**
+         * 帰宅
+         */
         private void moveFromCompanyToHome() {
                 String line = "line1"; // 乗車する列車の路線
                 String direction = "outbound"; // 乗車する列車の方面
@@ -258,13 +268,15 @@ public class TFatherRole extends TRole {
                 registerRule(new TRuleOfMoving(REACH_STATION_BACK, this, TSpotTypes.MIDWAY_SPOT, srcStation));
                 getRule(REACH_STATION_BACK).setTimeAndStage(18, 5, TStages.AGENT_MOVING);
                 // 18:10に乗車駅で指定された列車に乗車する．
-                registerRule(new TGettingOnTransportRule(GETON_TRANSPORT_BACK, this, srcStation, line, direction,
+                registerRule(new TGettingOnTransportationRule(GETON_TRANSPORTATION_BACK, this, srcStation, line,
+                                direction,
                                 trainName));
-                getRule(GETON_TRANSPORT_BACK).setTimeAndStage(18, 10, TStages.AGENT_MOVING);
+                getRule(GETON_TRANSPORTATION_BACK).setTimeAndStage(18, 10, TStages.AGENT_MOVING);
                 // 18:35に降車駅で列車から降車する．
-                registerRule(new TGettingOffTransportRule(GETOFF_TRANSPORT_BACK, this, dstStation, line, direction,
+                registerRule(new TGettingOffTransportationRule(GETOFF_TRANSPORTATION_BACK, this, dstStation, line,
+                                direction,
                                 trainName));
-                getRule(GETOFF_TRANSPORT_BACK).setTimeAndStage(18, 35, TStages.AGENT_MOVING);
+                getRule(GETOFF_TRANSPORTATION_BACK).setTimeAndStage(18, 35, TStages.AGENT_MOVING);
                 // 18:40に降車駅を出発して自宅に向かう．
                 registerRule(new TRuleOfMoving(GO_HOME, this, dstStation, TSpotTypes.MIDWAY_SPOT));
                 getRule(GO_HOME).setTimeAndStage(18, 40, TStages.AGENT_MOVING);
@@ -279,13 +291,16 @@ public class TFatherRole extends TRole {
 
 メインクラスは，mainメソッドの他に，スポットを生成するcreateSpotsメソッド，父親エージェントを生成するcreateFatherAgentsメソッドを持つ．
 
-列車については，以下のようにutils.transport.TTransportManagerクラスのオブジェクトを生成すればよい．utils.transport.TTransportManagerクラスのオブジェクトを生成すると，列車情報が読み込まれて，列車に関するルールがルール収集器に登録される．コンストラクタの引数は，順に，列車情報が収められているディレクトリ，スポット管理，ルール収集器，乱数発生器である．
+列車については，以下のようにtransportation.TTransportationManagerクラスのオブジェクトを生成すればよい．transportation.TTransportationManagerクラスのオブジェクトを生成すると，列車情報が読み込まれて，列車に関するルールがルール収集器に登録される．コンストラクタの引数は，順に，列車情報が収められているディレクトリ，スポット管理，ルール収集器，乱数発生器である．
 
 その他の詳細については，ソース中のコメントを参照されたい．メインクラスのソースコードを以下に示す．
 
 `TMain.java`
 
 ```java
+/**
+ * メインクラス
+ */
 public class TMain {
     /**
      * スポットを生成する
@@ -329,8 +344,10 @@ public class TMain {
         ICRandom rand = new TCJava48BitLcg();
         // ステージとその実行順序の定義：
         // 始発列車のスポット集合への登録 => 列車到着 => エージェント移動 => 列車出発 => 終着列車のスポット集合からの削除
-        List<String> stages = List.of(TTransport.TStages.NEW_TRANSPORT, TTransport.TStages.TRANSPORT_ARRIVING,
-                TStages.AGENT_MOVING, TTransport.TStages.TRANSPORT_LEAVING, TTransport.TStages.DELETING_TRANSPORT);
+        List<String> stages = List.of(TTransportation.TStages.NEW_TRANSPORTATION,
+                TTransportation.TStages.TRANSPORTATION_ARRIVING,
+                TStages.AGENT_MOVING, TTransportation.TStages.TRANSPORTATION_LEAVING,
+                TTransportation.TStages.DELETING_TRANSPORTATION);
         // モデルの生成
         int interval = 1; // １ステップの分数
         long seed = 0; // 乱数シード
@@ -345,7 +362,7 @@ public class TMain {
         createFatherAgents(agentManager, spotManager);
         /** スポットに滞在する人数の予測値 */
         int expectedMaxNumberOfAgents = 1;
-        TTransportManager transportManager = new TTransportManager("transportDB", spotManager,
+        TTransportationManager transportationManager = new TTransportationManager("transportationDB", spotManager,
                 model.getRuleAggregator(), rand, expectedMaxNumberOfAgents);
         TTime simulationPeriod = new TTime("2/0:00"); // シミュレーション終了時刻
         PrintWriter printWriter = new PrintWriter(logDir + File.separator + "spot.csv");

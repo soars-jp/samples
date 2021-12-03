@@ -1,4 +1,4 @@
-package jp.soars.utils.transport;
+package jp.soars.transportation;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,9 +11,12 @@ import jp.soars.core.TTime;
 import jp.soars.utils.csv.TCCsvData;
 import jp.soars.utils.random.ICRandom;
 
-public class TTransportManager {
+/**
+ * 乗り物管理クラス
+ */
+public class TTransportationManager {
     /** 列車集合 */
-    private HashMap<String, TTransport> fTransportDB = new HashMap<>();
+    private HashMap<String, TTransportation> fTransportationDB = new HashMap<>();
 
     /** 駅集合 */
     private HashMap<String, TStation> fStationDB = new HashMap<>();
@@ -36,24 +39,25 @@ public class TTransportManager {
     /**
      * コンストラクタ
      * 
-     * @param transportDBDirectory      乗り物情報DBディレクトリ
+     * @param transportationDBDirectory 乗り物情報DBディレクトリ
      * @param spotManager               スポット管理
      * @param ruleAggregator            ルール収集器
      * @param rand                      乱数生成器
      * @param expectedMaxNumberOfAgents このスポットに同時に滞在する最大エージェント数の予測値
      * @throws IOException
      */
-    public TTransportManager(String transportDBDirectory, TSpotManager spotManager, TRuleAggregator ruleAggregator,
+    public TTransportationManager(String transportationDBDirectory, TSpotManager spotManager,
+            TRuleAggregator ruleAggregator,
             ICRandom rand, int expectedMaxNumberOfAgents) throws IOException {
         fSpotManager = spotManager;
         fRuleAggregator = ruleAggregator;
         fRandom = rand;
-        TCCsvData lines = new TCCsvData(transportDBDirectory + File.separator + "lines.csv");
+        TCCsvData lines = new TCCsvData(transportationDBDirectory + File.separator + "lines.csv");
         for (int i = 0; i < lines.getNoOfRows(); ++i) {
-            initializeLine(transportDBDirectory, lines.getElement(i, "Line"), ruleAggregator, rand,
+            initializeLine(transportationDBDirectory, lines.getElement(i, "Line"), ruleAggregator, rand,
                     expectedMaxNumberOfAgents);
         }
-        TCCsvData stations = new TCCsvData(transportDBDirectory + File.separator + "stations.csv");
+        TCCsvData stations = new TCCsvData(transportationDBDirectory + File.separator + "stations.csv");
         initializeStationDB(stations, rand, expectedMaxNumberOfAgents);
         for (String stationName : fStationDB.keySet()) {
             fSpotManager.getSpotDB().put(stationName, fStationDB.get(stationName));
@@ -79,70 +83,73 @@ public class TTransportManager {
     /**
      * スケジュールの整合性をチェックする．
      * 
-     * @param transportName 乗り物名
-     * @param schedule      スケジュール
-     * @param soruce        始発駅
-     * @param departureTime 出発駅
+     * @param transportationName 乗り物名
+     * @param schedule           スケジュール
+     * @param soruce             始発駅
+     * @param departureTime      出発駅
      * @param destination
      * @param arrivalTime
      */
-    private void checkSchedule(String transportName, TCCsvData schedule, String source, TTime departureTime,
+    private void checkSchedule(String transportationName, TCCsvData schedule, String source, TTime departureTime,
             String destination, TTime arrivalTime) {
         if (!source.equals(schedule.getElement(0, "Station"))
                 || !departureTime.isEqualTo((schedule.getElement(0, "Time")))
                 || !destination.equals(schedule.getElement(schedule.getNoOfRows() - 1, "Station"))
                 || !arrivalTime.isEqualTo((schedule.getElement(schedule.getNoOfRows() - 1, "Time")))) {
             throw new RuntimeException(
-                    transportName + " is incosistent between the train list file and the train schedule file.");
+                    transportationName + " is incosistent between the train list file and the train schedule file.");
         }
     }
 
     /**
      * スポット名に変換する
      * 
-     * @param line          路線名
-     * @param direction     方面
-     * @param transportName 乗り物名
+     * @param line               路線名
+     * @param direction          方面
+     * @param transportationName 乗り物名
      * @return
      */
-    public static String convertToSpotName(String line, String direction, String transportName) {
-        return line + "." + direction + "." + transportName;
+    public static String convertToSpotName(String line, String direction, String transportationName) {
+        return line + "." + direction + "." + transportationName;
     }
 
     /**
      * 路線を初期化する．
      * 
-     * @param transportDBDirectory 乗り物DBディレクトリ
-     * @param line                 路線名
-     * @param ruleAggregator       ルール収集器
+     * @param transportationDBDirectory 乗り物DBディレクトリ
+     * @param line                      路線名
+     * @param ruleAggregator            ルール収集器
      */
-    private void initializeLine(String transportDBDirectory, String line, TRuleAggregator ruleAggregator, ICRandom rand,
+    private void initializeLine(String transportationDBDirectory, String line, TRuleAggregator ruleAggregator,
+            ICRandom rand,
             int expectedMaxNumberOfAgents) throws IOException {
-        String baseDir = transportDBDirectory + File.separator + line + File.separator;
-        TCCsvData transports = new TCCsvData(baseDir + "trains.csv");
-        for (int i = 0; i < transports.getNoOfRows(); ++i) {
-            if (!line.equals(transports.getElement(i, "Line"))) {
+        String baseDir = transportationDBDirectory + File.separator + line + File.separator;
+        TCCsvData transportations = new TCCsvData(baseDir + "trains.csv");
+        for (int i = 0; i < transportations.getNoOfRows(); ++i) {
+            if (!line.equals(transportations.getElement(i, "Line"))) {
                 throw new RuntimeException(
                         "Error: The directory name (" + line + ") must be the same as the line name ("
-                                + transports.getElement(i, "Line") + ") in train.csv.");
+                                + transportations.getElement(i, "Line") + ") in train.csv.");
             }
-            String direction = transports.getElement(i, "Direction"); // 方面
-            String trainName = transports.getElement(i, "TrainName"); // 列車名
-            String type = transports.getElement(i, "Type"); // タイプ
-            String source = transports.getElement(i, "Source"); // 始発駅
-            TTime departureTime = new TTime(transports.getElement(i, "DepartureTime")); // 出発時刻
-            String destination = transports.getElement(i, "Destination"); // 終着駅
-            TTime arrivalTime = new TTime(transports.getElement(i, "ArrivalTime")); // 到着時刻
+            String direction = transportations.getElement(i, "Direction"); // 方面
+            String trainName = transportations.getElement(i, "TrainName"); // 列車名
+            String type = transportations.getElement(i, "Type"); // タイプ
+            String source = transportations.getElement(i, "Source"); // 始発駅
+            TTime departureTime = new TTime(transportations.getElement(i, "DepartureTime")); // 出発時刻
+            String destination = transportations.getElement(i, "Destination"); // 終着駅
+            TTime arrivalTime = new TTime(transportations.getElement(i, "ArrivalTime")); // 到着時刻
             TCCsvData schedule = new TCCsvData(
                     baseDir + File.separator + direction + File.separator + trainName + ".csv"); // 運行スケジュール
             checkSchedule(trainName, schedule, source, departureTime, destination, arrivalTime);
-            TTransport transport = new TTransport(line, direction, trainName, type, source, departureTime, destination,
+            TTransportation transportation = new TTransportation(line, direction, trainName, type, source,
+                    departureTime,
+                    destination,
                     arrivalTime, schedule, ruleAggregator, rand, expectedMaxNumberOfAgents);
-            TTransportRole role = new TTransportRole(transport, schedule, this, rand);
-            transport.addRole(role);
-            transport.activateRole(role.getName());
-            fTransportDB.put(transport.getSpotName(), transport);
-            fSpotNameList.add(transport.getSpotName());
+            TTransportationRole role = new TTransportationRole(transportation, schedule, this, rand);
+            transportation.addRole(role);
+            transportation.activateRole(role.getName());
+            fTransportationDB.put(transportation.getSpotName(), transportation);
+            fSpotNameList.add(transportation.getSpotName());
         }
     }
 
@@ -151,8 +158,8 @@ public class TTransportManager {
      * 
      * @return 列車集合
      */
-    public HashMap<String, TTransport> getTransportDB() {
-        return fTransportDB;
+    public HashMap<String, TTransportation> getTransportationDB() {
+        return fTransportationDB;
     }
 
     /**
@@ -160,7 +167,7 @@ public class TTransportManager {
      * 
      * @return 乗り物のスポット名のリスト
      */
-    public ArrayList<String> getSpotNamesOfTransports() {
+    public ArrayList<String> getSpotNamesOfTransportations() {
         return fSpotNameList;
     }
 

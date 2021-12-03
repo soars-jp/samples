@@ -11,11 +11,14 @@ import jp.soars.core.TAgentManager;
 import jp.soars.core.TModel;
 import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
+import jp.soars.transportation.TTransportation;
+import jp.soars.transportation.TTransportationManager;
 import jp.soars.utils.random.ICRandom;
 import jp.soars.utils.random.TCJava48BitLcg;
-import jp.soars.utils.transport.TTransport;
-import jp.soars.utils.transport.TTransportManager;
 
+/**
+ * メインクラス
+ */
 public class TMain {
     /**
      * スポットを生成する
@@ -59,8 +62,10 @@ public class TMain {
         ICRandom rand = new TCJava48BitLcg();
         // ステージとその実行順序の定義：
         // 始発列車のスポット集合への登録 => 列車到着 => エージェント移動 => 列車出発 => 終着列車のスポット集合からの削除
-        List<String> stages = List.of(TTransport.TStages.NEW_TRANSPORT, TTransport.TStages.TRANSPORT_ARRIVING,
-                TStages.AGENT_MOVING, TTransport.TStages.TRANSPORT_LEAVING, TTransport.TStages.DELETING_TRANSPORT);
+        List<String> stages = List.of(TTransportation.TStages.NEW_TRANSPORTATION,
+                TTransportation.TStages.TRANSPORTATION_ARRIVING,
+                TStages.AGENT_MOVING, TTransportation.TStages.TRANSPORTATION_LEAVING,
+                TTransportation.TStages.DELETING_TRANSPORTATION);
         // モデルの生成
         int interval = 1; // １ステップの分数
         long seed = 0; // 乱数シード
@@ -75,7 +80,7 @@ public class TMain {
         createFatherAgents(agentManager, spotManager);
         /** スポットに滞在する人数の予測値 */
         int expectedMaxNumberOfAgents = 1;
-        TTransportManager transportManager = new TTransportManager("transportDB", spotManager,
+        TTransportationManager transportationManager = new TTransportationManager("transportationDB", spotManager,
                 model.getRuleAggregator(), rand, expectedMaxNumberOfAgents);
         TTime simulationPeriod = new TTime("2/0:00"); // シミュレーション終了時刻
         PrintWriter printWriter = new PrintWriter(logDir + File.separator + "spot.csv");

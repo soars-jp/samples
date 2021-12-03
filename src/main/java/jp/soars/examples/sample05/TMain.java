@@ -3,8 +3,6 @@ package jp.soars.examples.sample05;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +15,9 @@ import jp.soars.core.TTime;
 import jp.soars.utils.random.ICRandom;
 import jp.soars.utils.random.TCJava48BitLcg;
 
+/**
+ * メインクラス
+ */
 public class TMain {
 
     /**

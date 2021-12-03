@@ -2,9 +2,7 @@ package jp.soars.examples.sample06;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
-import jp.soars.core.TAgent;
 import jp.soars.core.TAgentManager;
 import jp.soars.core.TAgentRule;
 import jp.soars.core.TRole;
@@ -13,6 +11,9 @@ import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
 import jp.soars.utils.random.ICRandom;
 
+/**
+ * 終了時刻まで指定された時間間隔でランダムに移動を繰り返し，終了時刻に初期スポットに移動するルール．
+ */
 public class TRandomlyMovingRule extends TAgentRule {
     /** 終了時刻 */
     private TTime fEndTime;

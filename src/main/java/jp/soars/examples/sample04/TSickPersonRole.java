@@ -3,6 +3,9 @@ package jp.soars.examples.sample04;
 import jp.soars.core.TAgent;
 import jp.soars.core.TRole;
 
+/**
+ * 病人役割
+ */
 public class TSickPersonRole extends TRole {
     /** 役割名 */
     public static final String ROLE_NAME = "SickPersonRole";

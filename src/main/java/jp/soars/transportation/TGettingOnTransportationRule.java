@@ -1,4 +1,4 @@
-package jp.soars.utils.transport;
+package jp.soars.transportation;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -9,7 +9,10 @@ import jp.soars.core.TSpot;
 import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
 
-public class TGettingOnTransportRule extends TAgentRule {
+/**
+ * 乗り物に乗るルール
+ */
+public class TGettingOnTransportationRule extends TAgentRule {
     /** 乗車駅 */
     private String fStation;
 
@@ -20,16 +23,16 @@ public class TGettingOnTransportRule extends TAgentRule {
     private String fDirection;
 
     /** 乗り物名 */
-    private String fTransportName;
+    private String fTransportationName;
 
     /** 乗り物のスポット名 */
-    private String fSpotNameOfTransport;
+    private String fSpotNameOfTransportation;
 
     /** 乗り物タイプ．複数可． */
-    private Set<String> fTransportTypes;
+    private Set<String> fTransportationTypes;
 
     /** 乗り物の行き先．複数可． */
-    private Set<String> fTransportDestinations;
+    private Set<String> fTransportationDestinations;
 
     /** 次のルールを実行するステージ */
     private String fStageOfNextRule;
@@ -42,23 +45,23 @@ public class TGettingOnTransportRule extends TAgentRule {
     /**
      * コンストラクタ
      * 
-     * @param ruleName      ルール名
-     * @param ownerRole     ルールを保持する役割名
-     * @param station       駅名
-     * @param line          路線名
-     * @param direction     行き先
-     * @param transportName 乗り物の名前
+     * @param ruleName           ルール名
+     * @param ownerRole          ルールを保持する役割名
+     * @param station            駅名
+     * @param line               路線名
+     * @param direction          行き先
+     * @param transportationName 乗り物の名前
      */
-    public TGettingOnTransportRule(String ruleName, TRole ownerRole, String station, String line, String direction,
-            String transportName) {
+    public TGettingOnTransportationRule(String ruleName, TRole ownerRole, String station, String line, String direction,
+            String transportationName) {
         super(ruleName, ownerRole);
         fStation = station;
         fLine = line;
         fDirection = direction;
-        fTransportName = transportName;
-        fSpotNameOfTransport = TTransportManager.convertToSpotName(line, direction, transportName);
-        fTransportTypes = null;
-        fTransportDestinations = null;
+        fTransportationName = transportationName;
+        fSpotNameOfTransportation = TTransportationManager.convertToSpotName(line, direction, transportationName);
+        fTransportationTypes = null;
+        fTransportationDestinations = null;
         fStageOfNextRule = null;
         fNextRule = null;
     }
@@ -74,16 +77,17 @@ public class TGettingOnTransportRule extends TAgentRule {
      * @param stageOfNextRule 次のルールを発火させるまでのインターバル
      * @param nextRule        次のルール名
      */
-    public TGettingOnTransportRule(String ruleName, TRole ownerRole, String station, String line, String direction,
-            Set<String> transportTypes, Set<String> transportDestinations, String stageOfNextRule, String nextRule) {
+    public TGettingOnTransportationRule(String ruleName, TRole ownerRole, String station, String line, String direction,
+            Set<String> transportationTypes, Set<String> transportationDestinations, String stageOfNextRule,
+            String nextRule) {
         super(ruleName, ownerRole);
         fStation = station;
         fLine = line;
         fDirection = direction;
-        fTransportName = null;
-        fSpotNameOfTransport = null;
-        fTransportTypes = transportTypes;
-        fTransportDestinations = transportDestinations;
+        fTransportationName = null;
+        fSpotNameOfTransportation = null;
+        fTransportationTypes = transportationTypes;
+        fTransportationDestinations = transportationDestinations;
         fStageOfNextRule = stageOfNextRule;
         fNextRule = nextRule;
     }
@@ -93,13 +97,15 @@ public class TGettingOnTransportRule extends TAgentRule {
             HashMap<String, Object> globalSharedVariables) {
         HashMap<String, TSpot> spotSet = spotManager.getSpotDB();
 
-        if (isAt(fStation) && spotSet.containsKey(fSpotNameOfTransport)
-                && ((TTransport) spotSet.get(fSpotNameOfTransport)).isAt(fStation)) {
-            getAgent().moveTo(spotSet.get(fSpotNameOfTransport));
+        if (isAt(fStation) && spotSet.containsKey(fSpotNameOfTransportation)
+                && ((TTransportation) spotSet.get(fSpotNameOfTransportation)).isAt(fStation)) {
+            getAgent().moveTo(spotSet.get(fSpotNameOfTransportation));
             if (fNextRule != null) {
-                ((TGettingOffTransportRule) getRule(fNextRule)).setSpotNameOfTransport(fSpotNameOfTransport);
-                ((TTransport) spotSet.get(fSpotNameOfTransport)).addRuleToNotify((TAgentRule) getRule(fNextRule),
-                        ((TGettingOffTransportRule) getRule(fNextRule)).getStation(), getAgent().getName(),
+                ((TGettingOffTransportationRule) getRule(fNextRule))
+                        .setSpotNameOfTransportation(fSpotNameOfTransportation);
+                ((TTransportation) spotSet.get(fSpotNameOfTransportation)).addRuleToNotify(
+                        (TAgentRule) getRule(fNextRule),
+                        ((TGettingOffTransportationRule) getRule(fNextRule)).getStation(), getAgent().getName(),
                         fStageOfNextRule, "");
             }
         }
@@ -110,8 +116,8 @@ public class TGettingOnTransportRule extends TAgentRule {
      * 
      * @return 乗車中の乗り物のスポット名
      */
-    public String getSpotNameOfTransport() {
-        return fSpotNameOfTransport;
+    public String getSpotNameOfTransportation() {
+        return fSpotNameOfTransportation;
     }
 
     /**
@@ -119,8 +125,8 @@ public class TGettingOnTransportRule extends TAgentRule {
      * 
      * @return 乗車中の乗り物の名前
      */
-    public String getTransportName() {
-        return fTransportName;
+    public String getTransportationName() {
+        return fTransportationName;
     }
 
     /**
@@ -141,17 +147,17 @@ public class TGettingOnTransportRule extends TAgentRule {
      * 乗り物タイプ
      */
     public Set<String> getTypes() {
-        return fTransportTypes;
+        return fTransportationTypes;
     }
 
     /**
      * 目的地タイプ
      */
     public Set<String> getDestinations() {
-        return fTransportDestinations;
+        return fTransportationDestinations;
     }
 
-    public void setSpotNameOfTransport(String transportName) {
-        fSpotNameOfTransport = transportName;
+    public void setSpotNameOfTransportation(String transportationName) {
+        fSpotNameOfTransportation = transportationName;
     }
 }

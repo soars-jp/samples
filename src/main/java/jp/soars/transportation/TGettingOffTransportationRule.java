@@ -1,4 +1,4 @@
-package jp.soars.utils.transport;
+package jp.soars.transportation;
 
 import java.util.HashMap;
 
@@ -9,12 +9,15 @@ import jp.soars.core.TSpot;
 import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
 
-public class TGettingOffTransportRule extends TAgentRule {
+/**
+ * 乗り物から降りる
+ */
+public class TGettingOffTransportationRule extends TAgentRule {
     /** 降車駅 */
     private String fStation;
 
     /** 乗車中の乗り物のスポット名 */
-    private String fSpotNameOfTransport;
+    private String fSpotNameOfTransportation;
 
     /** 次のルールを実行するまでの時間 */
     private TTime fTimeToNextRule;
@@ -31,17 +34,18 @@ public class TGettingOffTransportRule extends TAgentRule {
     /**
      * コンストラクタ．
      * 
-     * @param ownerRole     このルールを持つ役割
-     * @param station       降車駅
-     * @param line          路線
-     * @param direction     方面
-     * @param transportName 乗り物の名前
+     * @param ownerRole          このルールを持つ役割
+     * @param station            降車駅
+     * @param line               路線
+     * @param direction          方面
+     * @param transportationName 乗り物の名前
      */
-    public TGettingOffTransportRule(String ruleName, TRole ownerRole, String station, String line, String direction,
-            String transportName) {
+    public TGettingOffTransportationRule(String ruleName, TRole ownerRole, String station, String line,
+            String direction,
+            String transportationName) {
         super(ruleName, ownerRole);
         fStation = station;
-        fSpotNameOfTransport = TTransportManager.convertToSpotName(line, direction, transportName);
+        fSpotNameOfTransportation = TTransportationManager.convertToSpotName(line, direction, transportationName);
         fTimeToNextRule = null;
         fStageOfNextRule = null;
         fNextRule = null;
@@ -58,11 +62,11 @@ public class TGettingOffTransportRule extends TAgentRule {
      * @param stageOfNextRule 次のルールを実行するステージ
      * @param nextRule        次に実行するルール
      */
-    public TGettingOffTransportRule(String ruleName, TRole ownerRole, String station, TTime timeToNextRule,
+    public TGettingOffTransportationRule(String ruleName, TRole ownerRole, String station, TTime timeToNextRule,
             String stageOfNextRule, String nextRule) {
         super(ruleName, ownerRole);
         fStation = station;
-        fSpotNameOfTransport = null;
+        fSpotNameOfTransportation = null;
         fTimeToNextRule = timeToNextRule;
         fStageOfNextRule = stageOfNextRule;
         fNextRule = nextRule;
@@ -71,15 +75,15 @@ public class TGettingOffTransportRule extends TAgentRule {
 
     /**
      * コンストラクタ． ただし，発火条件を指定するためには，setRelativeTimeAndStageメソッドを使うこと．
-     * ここで，引数のpreceedentRuleには対となるTGettingOnTransportRuleオブジェクト，relativeTimeには"0:00"を与えること．
+     * ここで，引数のpreceedentRuleには対となるTGettingOnTransportationRuleオブジェクト，relativeTimeには"0:00"を与えること．
      * 
      * @param ownerRole このルールをもつロール
      * @param station   降車駅
      */
-    public TGettingOffTransportRule(String ruleName, TRole ownerRole, String station) {
+    public TGettingOffTransportationRule(String ruleName, TRole ownerRole, String station) {
         super(ruleName, ownerRole);
         fStation = station;
-        fSpotNameOfTransport = null;
+        fSpotNameOfTransportation = null;
         fTimeToNextRule = null;
         fStageOfNextRule = null;
         fNextRule = null;
@@ -91,8 +95,8 @@ public class TGettingOffTransportRule extends TAgentRule {
             HashMap<String, Object> globalSharedVariables) {
         // 乗り物に乗っていて，乗り物が降車駅に着いたら，駅に移動する．
         HashMap<String, TSpot> spotSet = spotManager.getSpotDB();
-        if (spotSet.containsKey(fSpotNameOfTransport)
-                && ((TTransport) spotSet.get(fSpotNameOfTransport)).isAt(fStation)) {
+        if (spotSet.containsKey(fSpotNameOfTransportation)
+                && ((TTransportation) spotSet.get(fSpotNameOfTransportation)).isAt(fStation)) {
             getAgent().moveTo(spotSet.get(fStation));
             if (fNextRule != null) { // 次に実行するルールが定義されていたら
                 fNextTime.copyFrom(currentTime).add(fTimeToNextRule);
@@ -113,9 +117,9 @@ public class TGettingOffTransportRule extends TAgentRule {
     /**
      * 乗り物の名前をセットする
      * 
-     * @param transportName
+     * @param transportationName
      */
-    public void setSpotNameOfTransport(String transportName) {
-        fSpotNameOfTransport = transportName;
+    public void setSpotNameOfTransportation(String transportationName) {
+        fSpotNameOfTransportation = transportationName;
     }
 }

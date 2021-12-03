@@ -1,4 +1,4 @@
-package jp.soars.utils.transport;
+package jp.soars.transportation;
 
 import java.util.HashMap;
 
@@ -9,9 +9,12 @@ import jp.soars.core.TSpot;
 import jp.soars.core.TTime;
 import jp.soars.utils.random.ICRandom;
 
+/**
+ * 駅クラス
+ */
 public class TStation extends TSpot {
     /** エージェント名をキー，駅に乗り物が到着した際に通知するルールを値とするハッシュマップ */
-    private HashMap<String, TGettingOnTransportRule> fRulesToNotifyThatTransportArrives;
+    private HashMap<String, TGettingOnTransportationRule> fRulesToNotifyThatTransportationArrives;
 
     /** ルールが発火するステージ */
     private HashMap<TRule, String> fStageMap;
@@ -26,7 +29,7 @@ public class TStation extends TSpot {
      */
     public TStation(String name, TRuleAggregator ruleAggregator, ICRandom random, int expectedMaxNumberOfAgents) {
         super(name, ruleAggregator, random, expectedMaxNumberOfAgents);
-        fRulesToNotifyThatTransportArrives = new HashMap<>();
+        fRulesToNotifyThatTransportationArrives = new HashMap<>();
         fStageMap = new HashMap<TRule, String>();
     }
 
@@ -37,8 +40,8 @@ public class TStation extends TSpot {
      * @param rule      ルール
      * @param stage     ステージ名
      */
-    public void addRule(String agentName, TGettingOnTransportRule rule, String stage) {
-        fRulesToNotifyThatTransportArrives.put(agentName, rule);
+    public void addRule(String agentName, TGettingOnTransportationRule rule, String stage) {
+        fRulesToNotifyThatTransportationArrives.put(agentName, rule);
         fStageMap.put(rule, stage);
     }
 
@@ -48,7 +51,7 @@ public class TStation extends TSpot {
      * @param agentName
      */
     public void removeRule(String agentName) {
-        fRulesToNotifyThatTransportArrives.remove(agentName);
+        fRulesToNotifyThatTransportationArrives.remove(agentName);
     }
 
     /**
@@ -61,23 +64,25 @@ public class TStation extends TSpot {
      * @param agentSet              エージェント集合
      * @param globalSharedVariables グローバル共有変数集合
      */
-    public void notifyAllThatTransportArrives(TTransport notifier, TTime currentTime, String currentStage,
+    public void notifyAllThatTransportationArrives(TTransportation notifier, TTime currentTime,
+            String currentStage,
             HashMap<String, TSpot> spotSet, HashMap<String, TAgent> agentSet,
             HashMap<String, Object> globalSharedVariables) {
-        for (String agentName : fRulesToNotifyThatTransportArrives.keySet()) {
-            TGettingOnTransportRule rule = fRulesToNotifyThatTransportArrives.get(agentName);
+        for (String agentName : fRulesToNotifyThatTransportationArrives.keySet()) {
+            TGettingOnTransportationRule rule = fRulesToNotifyThatTransportationArrives.get(agentName);
             String line = notifier.getLine(); // 路線
             String direction = notifier.getDirection(); // 方面
             String type = notifier.getType(); // タイプ
             String destination = notifier.getDestination(); // 行き先
             // 路線名，方向，種類，目的地が一致していれば，乗車ルールを同時刻のAgentMovingステージに登録する
             if (rule.getLine().equals(line) && rule.getDirection().equals(direction)
-                    && (rule.getTypes().contains(TGettingOnTransportRule.ANY) || rule.getTypes().contains(type))
-                    && (rule.getDestinations().contains(TGettingOnTransportRule.ANY)
+                    && (rule.getTypes().contains(TGettingOnTransportationRule.ANY)
+                            || rule.getTypes().contains(type))
+                    && (rule.getDestinations().contains(TGettingOnTransportationRule.ANY)
                             || rule.getDestinations().contains(destination))) {
-                rule.setSpotNameOfTransport(notifier.getName());
+                rule.setSpotNameOfTransportation(notifier.getName());
                 rule.setTimeAndStage(false, currentTime, "AgentMoving");
-                fRulesToNotifyThatTransportArrives.remove(agentName);
+                fRulesToNotifyThatTransportationArrives.remove(agentName);
             }
         }
     }

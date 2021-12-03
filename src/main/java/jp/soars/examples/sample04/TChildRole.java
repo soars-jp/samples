@@ -3,6 +3,7 @@ package jp.soars.examples.sample04;
 import jp.soars.core.TAgent;
 import jp.soars.core.TRole;
 
+/** 子供役割 */
 public class TChildRole extends TRole {
     /** 役割名 */
     public static final String ROLE_NAME = "FatherRole";

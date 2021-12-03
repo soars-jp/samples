@@ -1,4 +1,4 @@
-package jp.soars.utils.transport;
+package jp.soars.transportation;
 
 import java.util.HashMap;
 
@@ -11,24 +11,27 @@ import jp.soars.core.TTime;
 import jp.soars.utils.csv.TCCsvData;
 import jp.soars.utils.random.ICRandom;
 
-public class TTransport extends TSpot {
+/**
+ * 乗り物クラス
+ */
+public class TTransportation extends TSpot {
     /** 乗り物に関連するステージ */
     public class TStages {
         /** 始発のスポット集合への登録 */
-        public static final String NEW_TRANSPORT = "NewTransport";
+        public static final String NEW_TRANSPORTATION = "NewTransportation";
         /** 到着 */
-        public static final String TRANSPORT_ARRIVING = "TransportArraiving";
+        public static final String TRANSPORTATION_ARRIVING = "TransportationArraiving";
         /** 出発 */
-        public static final String TRANSPORT_LEAVING = "TransportLeaving";
+        public static final String TRANSPORTATION_LEAVING = "TransportationLeaving";
         /** 終着のスポット集合からの削除 */
-        public static final String DELETING_TRANSPORT = "DeletingTransport";
+        public static final String DELETING_TRANSPORTATION = "DeletingTransportation";
     }
 
     /** 現在地 */
     private String fCurrentSpotName;
 
     /** 駅に到着したことを知らせるルールの集合 */
-    private HashMap<String, HashMap<String, TRule>> fRulesToNotifyThatTransportArrivesAtStation = new HashMap<>();
+    private HashMap<String, HashMap<String, TRule>> fRulesToNotifyThatTransportationArrivesAtStation = new HashMap<>();
 
     /** ルールが発火するステージ */
     private HashMap<TRule, String> fStageMap;
@@ -39,7 +42,7 @@ public class TTransport extends TSpot {
     private String fDirection;
 
     /** 乗り物の名前 */
-    private String fTransportName;
+    private String fTransportationName;
 
     /** 乗り物のタイプ */
     private String fType;
@@ -64,7 +67,7 @@ public class TTransport extends TSpot {
      * 
      * @param line                      路線名
      * @param direction                 方向
-     * @param transportName             乗り物の名前
+     * @param transportationName        乗り物の名前
      * @param type                      乗り物のタイプ
      * @param source                    始発駅
      * @param departureTime             出発時刻
@@ -75,14 +78,14 @@ public class TTransport extends TSpot {
      * @param rand                      乱数
      * @param expectedMaxNumberOfAgents スポットにいる人数の最大値
      */
-    public TTransport(String line, String direction, String transportName, String type, String source,
+    public TTransportation(String line, String direction, String transportationName, String type, String source,
             TTime departureTime, String destination, TTime arrivalTime, TCCsvData schedule,
             TRuleAggregator ruleAggregator, ICRandom rand, int expectedMaxNumberOfAgents) {
-        super(TTransportManager.convertToSpotName(line, direction, transportName), ruleAggregator, rand,
+        super(TTransportationManager.convertToSpotName(line, direction, transportationName), ruleAggregator, rand,
                 expectedMaxNumberOfAgents);
         fLine = line;
         fDirection = direction;
-        fTransportName = transportName;
+        fTransportationName = transportationName;
         fType = type;
         fSource = source;
         fDepartureTime = departureTime;
@@ -90,23 +93,23 @@ public class TTransport extends TSpot {
         fArrivalTime = arrivalTime;
         fInService = false;
         for (int i = 0; i < schedule.getNoOfRows(); ++i) {
-            fRulesToNotifyThatTransportArrivesAtStation.put(schedule.getElement(i, "Station"),
+            fRulesToNotifyThatTransportationArrivesAtStation.put(schedule.getElement(i, "Station"),
                     new HashMap<String, TRule>());
         }
         fStageMap = new HashMap<TRule, String>();
     }
 
     /**
-     * 乗り物が指定駅に到着したことを通知するルールを登録する． TGettingOffTransportnRuleが登録されることを想定している．
+     * 乗り物が指定駅に到着したことを通知するルールを登録する． TGettingOffTransportationnRuleが登録されることを想定している．
      * 
      * @param rule            通知対象のルール
-     * @param station         通知を行う駅．TGettingOffTransportRuleを登録する場合は，降車駅を指定する．
+     * @param station         通知を行う駅．TGettingOffTransportationRuleを登録する場合は，降車駅を指定する．
      * @param agentName       ルールを登録するエージェント名
      * @param callBackMessage コールバックメッセージ
      */
     public void addRuleToNotify(TAgentRule rule, String station, String agentName, String stage,
             String callBackMessage) {
-        fRulesToNotifyThatTransportArrivesAtStation.get(station).put(agentName, rule);
+        fRulesToNotifyThatTransportationArrivesAtStation.get(station).put(agentName, rule);
         fStageMap.put(rule, stage);
     }
 
@@ -117,7 +120,7 @@ public class TTransport extends TSpot {
      * @param agentName ルールを登録したエージェント
      */
     public void removeRule(String station, String agentName) {
-        fRulesToNotifyThatTransportArrivesAtStation.get(station).remove(agentName);
+        fRulesToNotifyThatTransportationArrivesAtStation.get(station).remove(agentName);
     }
 
     /**
@@ -130,15 +133,16 @@ public class TTransport extends TSpot {
      * @param agentSet              エージェント集合
      * @param globalSharedVariables グローバル共有変数集合
      */
-    public void notifyAllThatTransportArrives(String station, TTime currentTime, String currentStage,
+    public void notifyAllThatTransportationArrives(String station, TTime currentTime, String currentStage,
             HashMap<String, TSpot> spotSet, HashMap<String, TAgent> agentSet,
             HashMap<String, Object> globalSharedVariables) {
-        for (String agentName : fRulesToNotifyThatTransportArrivesAtStation.get(fCurrentSpotName).keySet()) {
-            fRulesToNotifyThatTransportArrivesAtStation.get(fCurrentSpotName).get(agentName).setTimeAndStage(false,
+        for (String agentName : fRulesToNotifyThatTransportationArrivesAtStation.get(fCurrentSpotName).keySet()) {
+            fRulesToNotifyThatTransportationArrivesAtStation.get(fCurrentSpotName).get(agentName).setTimeAndStage(false,
                     currentTime,
-                    fStageMap.get(fRulesToNotifyThatTransportArrivesAtStation.get(fCurrentSpotName).get(agentName)));
-            fStageMap.remove(fRulesToNotifyThatTransportArrivesAtStation.get(fCurrentSpotName).get(agentName));
-            fRulesToNotifyThatTransportArrivesAtStation.get(fCurrentSpotName).remove(agentName);
+                    fStageMap.get(
+                            fRulesToNotifyThatTransportationArrivesAtStation.get(fCurrentSpotName).get(agentName)));
+            fStageMap.remove(fRulesToNotifyThatTransportationArrivesAtStation.get(fCurrentSpotName).get(agentName));
+            fRulesToNotifyThatTransportationArrivesAtStation.get(fCurrentSpotName).remove(agentName);
         }
     }
 
@@ -238,8 +242,8 @@ public class TTransport extends TSpot {
      * 
      * @return 乗り物の名前
      */
-    public String getTransportName() {
-        return fTransportName;
+    public String getTransportationName() {
+        return fTransportationName;
     }
 
     /**

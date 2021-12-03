@@ -2,11 +2,9 @@ package jp.soars.examples.sample02;
 
 import java.util.HashMap;
 
-import jp.soars.core.TAgent;
 import jp.soars.core.TAgentManager;
 import jp.soars.core.TAgentRule;
 import jp.soars.core.TRole;
-import jp.soars.core.TSpot;
 import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
 
