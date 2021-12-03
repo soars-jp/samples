@@ -32,7 +32,6 @@ public class TKillerRule extends TAgentRule {
         //ダミースポットをランダムに１つ削除
         List<TSpot> dummySpotList = spotManager.getSpots(TSpotTypes.DUMMY_SPOT);
         TSpot spot = dummySpotList.get(rand.nextInt(dummySpotList.size()));
-        dummySpotList.remove(spot);
         fSpotName = spot.getName();
         if(spot.getAgents().isEmpty()){ //エージェントがいるスポットを消そうとするとエラー
             spotManager.deleteSpot(spot); 
@@ -40,7 +39,6 @@ public class TKillerRule extends TAgentRule {
         //ダミーエージェントをランダムに１つ削除
         List<TAgent> dummyAgentList = agentManager.getAgents(TAgentTypes.DUMMY_AGENT);
         TAgent agent = dummyAgentList.get(rand.nextInt(dummyAgentList.size()));
-        dummyAgentList.remove(agent);
         agentManager.deleteAgent(agent);
         fAgentName = agent.getName();
     }
