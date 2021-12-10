@@ -58,8 +58,6 @@ public class TMain {
     public static void main(String[] args) throws IOException {
         // ログを収集するディレクトリ
         String logDir = "logs/sample09";
-        // 乱数生成
-        ICRandom rand = new TCJava48BitLcg();
         // ステージとその実行順序の定義：
         // 始発列車のスポット集合への登録 => 列車到着 => エージェント移動 => 列車出発 => 終着列車のスポット集合からの削除
         List<String> stages = List.of(TTransportation.TStages.NEW_TRANSPORTATION,
@@ -81,7 +79,7 @@ public class TMain {
         /** スポットに滞在する人数の予測値 */
         int expectedMaxNumberOfAgents = 3;
         TTransportationManager transportationManager = new TTransportationManager("transportationDB", spotManager,
-                model.getRuleAggregator(), rand, expectedMaxNumberOfAgents);
+                model.getRuleAggregator(), model.getRandom(), false, expectedMaxNumberOfAgents);
         // エージェントの初期化
         // メインループ： 0日0時0分から3日23時まで1時間単位でまわす．
         TTime simulationPeriod = new TTime("2/0:00"); // シミュレーション終了時刻

@@ -58,8 +58,7 @@ public class TMain {
     public static void main(String[] args) throws IOException {
         // ログを収集するディレクトリ
         String logDir = "logs/sample08";
-        // 乱数生成
-        ICRandom rand = new TCJava48BitLcg();
+
         // ステージとその実行順序の定義：
         // 始発列車のスポット集合への登録 => 列車到着 => エージェント移動 => 列車出発 => 終着列車のスポット集合からの削除
         List<String> stages = List.of(TTransportation.TStages.NEW_TRANSPORTATION,
@@ -81,7 +80,7 @@ public class TMain {
         /** スポットに滞在する人数の予測値 */
         int expectedMaxNumberOfAgents = 1;
         TTransportationManager transportationManager = new TTransportationManager("transportationDB", spotManager,
-                model.getRuleAggregator(), rand, expectedMaxNumberOfAgents);
+                model.getRuleAggregator(), model.getRandom(), false, expectedMaxNumberOfAgents);
         TTime simulationPeriod = new TTime("2/0:00"); // シミュレーション終了時刻
         PrintWriter printWriter = new PrintWriter(logDir + File.separator + "spot.csv");
         while (model.getTime().isLessThan(simulationPeriod)) {
