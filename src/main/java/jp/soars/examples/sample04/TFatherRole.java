@@ -4,7 +4,7 @@ import jp.soars.core.TAgent;
 import jp.soars.core.TRole;
 
 /**
- * 父親役割． 9時に会社に出社して，その32時間後に帰宅する．
+ * 父親役割．
  */
 public class TFatherRole extends TRole {
 

@@ -1,4 +1,4 @@
-package jp.soars.examples.sample03;
+package jp.soars.examples.sample08;
 
 import java.util.HashMap;
 
@@ -9,9 +9,9 @@ import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
 
 /**
- * 確率的移動ルール
+ * 移動ルール．
  */
-public class TStocasticallyMovingRule extends TAgentRule {
+public class TRuleOfMoving extends TAgentRule {
 
     /** 出発地 */
     private String fSource;
@@ -28,27 +28,39 @@ public class TStocasticallyMovingRule extends TAgentRule {
     /** 次に実行するルール名 */
     private String fNextRule;
 
-    /** 移動確率 */
-    private double fProbability;
+    /**
+     * コンストラクタ．
+     * 
+     * @param ruleName        このルールの名前
+     * @param ownerRole       このルールをもつ役割
+     * @param sourceSpot      出発地
+     * @param destinationSpot 目的地
+     */
+    public TRuleOfMoving(String ruleName, TRole ownerRole, String sourceSpot, String destinationSpot) {
+        super(ruleName, ownerRole);
+        fSource = sourceSpot;
+        fDestination = destinationSpot;
+        fTimeToNextRule = -1;
+        fStageOfNextRule = null;
+        fNextRule = null;
+    }
 
     /**
-     * コンストラクタ． 絶対時刻を指定する．
+     * コンストラクタ．
      * 
-     * @param ruleName
+     * @param ruleName        このルールの名前
      * @param ownerRole       このルールをもつ役割
      * @param sourceSpot      出発地
      * @param destinationSpot 目的地
      * @param timeToNextRule  次のルールを実行するまでの時間
      * @param stageOfNextRule 次のルールを実行するステージ
-     * @param nextRule        次に実行するルール名
-     * @param probability     移動確率
+     * @param nextRule        次に実行するルール
      */
-    public TStocasticallyMovingRule(String ruleName, TRole ownerRole, String sourceSpot, String destinationSpot,
-            int timeToNextRule, String stageOfNextRule, String nextRule, double probability) {
+    public TRuleOfMoving(String ruleName, TRole ownerRole, String sourceSpot, String destinationSpot,
+            int timeToNextRule, String stageOfNextRule, String nextRule) {
         super(ruleName, ownerRole);
         fSource = sourceSpot;
         fDestination = destinationSpot;
-        fProbability = probability;
         fTimeToNextRule = timeToNextRule;
         fStageOfNextRule = stageOfNextRule;
         fNextRule = nextRule;
@@ -57,15 +69,15 @@ public class TStocasticallyMovingRule extends TAgentRule {
     @Override
     public void doIt(TTime currentTime, String stage, TSpotManager spotManager, TAgentManager agentManager,
             HashMap<String, Object> globalSharedVariables) {
-        if (isAt(fSource) && getRandom().nextDouble() <= fProbability) { // スポット条件および移動確率条件が満たされたら，
+        if (isAt(fSource)) { // 出発地にいたら，
             moveTo(spotManager.getSpotDB().get(fDestination)); // 目的地へ移動する．
-            if (fNextRule != null) {
-                int day = currentTime.getDay();// 次のルールを実行する日付
+            if (fNextRule != null) { // 次に実行するルールが定義されていたら
+                int day = currentTime.getDay(); // 次のルールを実行する日
                 int hour = currentTime.getHour() + fTimeToNextRule; // 次のルールを実行する時間
                 int minute = currentTime.getMinute(); // 次のルールを実行する分
                 getRule(fNextRule).setTimeAndStage(day, hour, minute, fStageOfNextRule); // 臨時実行ルールとして予約
             }
         }
-        return;
     }
+
 }

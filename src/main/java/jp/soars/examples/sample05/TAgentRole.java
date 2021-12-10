@@ -7,6 +7,9 @@ import jp.soars.core.TRole;
 import jp.soars.core.TSpot;
 import jp.soars.core.TTime;
 
+/**
+ * エージェント役割
+ */
 public class TAgentRole extends TRole {
     /** 役割名 */
     public static final String ROLE_NAME = "AgentRole";

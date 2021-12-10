@@ -3,8 +3,6 @@ package jp.soars.examples.sample06;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +16,7 @@ import jp.soars.utils.random.ICRandom;
 import jp.soars.utils.random.TCJava48BitLcg;
 
 /**
- * メインクラス． シミュレーションステップ：60分 シミュレーション期間：７日間
- * シナリオ：３人の父親エージェントが，毎日，9時に自宅を出発して会社に行き，17時に会社を出発して自宅に戻る．
+ * メインクラス．
  */
 public class TMain {
 

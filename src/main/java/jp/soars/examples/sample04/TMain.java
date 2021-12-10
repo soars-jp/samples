@@ -11,8 +11,7 @@ import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
 
 /**
- * メインクラス． シミュレーションステップ：60分 シミュレーション期間：７日間
- * シナリオ：３人の父親エージェントが，毎日，9時に自宅を出発して会社に行き，17時に会社を出発して自宅に戻る．
+ * メインクラス．
  */
 public class TMain {
 

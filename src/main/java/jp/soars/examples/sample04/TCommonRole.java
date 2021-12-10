@@ -3,6 +3,9 @@ package jp.soars.examples.sample04;
 import jp.soars.core.TAgent;
 import jp.soars.core.TRole;
 
+/**
+ * 共通役割
+ */
 public class TCommonRole extends TRole {
     /** 役割名 */
     public static final String ROLE_NAME = "CommonRole";
