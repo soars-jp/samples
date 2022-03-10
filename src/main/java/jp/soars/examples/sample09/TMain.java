@@ -39,11 +39,13 @@ public class TMain {
      * @throws IOException
      */
     private static void createFatherAgents(TAgentManager agentManager, TSpotManager spotManager) {
-        int noOfAgents = 1;
+        int noOfAgents = 5;
         ArrayList<TAgent> fathers = agentManager.createAgents(TAgentTypes.FATHER, noOfAgents);
+        // それぞれの父親はstation2,station3,station4,..から通勤する
         for (int i = 0; i < fathers.size(); i++) {
             TAgent father = fathers.get(i);
-            TFatherRole fatherRole = new TFatherRole(father, TSpotTypes.HOME + (i + 1));
+            TFatherRole fatherRole = new TFatherRole(father, TSpotTypes.HOME + (i + 1), "line1", "station" + (i + 2),
+                    "station8");
             father.addRole(fatherRole);
             father.activateRole(fatherRole.getName());
             father.initializeCurrentSpot(spotManager.getSpotDB().get(TSpotTypes.HOME + (i + 1)));
@@ -69,7 +71,7 @@ public class TMain {
         long seed = 0; // 乱数シード
         TModel model = new TModel(stages, interval, seed);
         // スポットの初期化
-        int noOfSpots = 1; // 家の数
+        int noOfSpots = 5; // 家の数
         TSpotManager spotManager = model.getSpotManager(); // スポット管理
         // エージェントの初期化
         TAgentManager agentManager = model.getAgentManager(); // エージェント管理
@@ -77,7 +79,7 @@ public class TMain {
         createSpots(spotManager, noOfSpots);
         createFatherAgents(agentManager, spotManager);
         /** スポットに滞在する人数の予測値 */
-        int expectedMaxNumberOfAgents = 3;
+        int expectedMaxNumberOfAgents = 5;
         TTransportationManager transportationManager = new TTransportationManager("transportationDB", spotManager,
                 model.getRuleAggregator(), model.getRandom(), false, expectedMaxNumberOfAgents);
         // エージェントの初期化
