@@ -23,9 +23,9 @@ public class TChildRole extends TRole {
     public TChildRole(TAgent ownerAgent, String home) {
         super(ROLE_NAME, ownerAgent); // 親クラスのコンストラクタを呼び出す
         // 自宅にいるなら学校に移動する
-        registerRule(new TRuleOfMoving(LEAVE_HOME, this, home, TSpotTypes.SCHOOL));
+        registerRule(new TRuleOfMoving(LEAVE_HOME, this, home, TSpotTypes.SCHOOL + "1"));
         // 学校にいるならば，自宅に移動する．
-        registerRule(new TRuleOfMoving(RETURN_HOME, this, TSpotTypes.SCHOOL, home));
+        registerRule(new TRuleOfMoving(RETURN_HOME, this, TSpotTypes.SCHOOL + "1", home));
         // 毎日9時，エージェントステージにLEAVE_HOMEルールが発火するように予約する．
         getRule(LEAVE_HOME).setTimeAndStage(8, 0, TStages.AGENT_MOVING);
         getRule(RETURN_HOME).setTimeAndStage(15, 0, TStages.AGENT_MOVING);

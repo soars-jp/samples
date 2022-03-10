@@ -25,9 +25,10 @@ public class TSickPersonRole extends TRole {
      */
     public TSickPersonRole(TAgent ownerAgent, String home, int medicTTime, String backRole) {
         super(ROLE_NAME, ownerAgent); // 親クラスのコンストラクタを呼び出す．
-        registerRule(new TRuleOfMoving(GO_HOSPITAL, this, home, TSpotTypes.HOSPITAL, medicTTime, TStages.AGENT_MOVING,
+        registerRule(new TRuleOfMoving(GO_HOSPITAL, this, home, TSpotTypes.HOSPITAL
+                + "1", medicTTime, TStages.AGENT_MOVING,
                 RECOVER));// 10時に自宅から病院に移動する
-        registerRule(new TRecoveringFromSickRule(RECOVER, this, TSpotTypes.HOSPITAL, home, backRole));
+        registerRule(new TRecoveringFromSickRule(RECOVER, this, TSpotTypes.HOSPITAL + "1", home, backRole));
         // 病院に到着してから，時間が診察時間経過したら，自宅に戻って，役割を戻す．
         getRule(GO_HOSPITAL).setTimeAndStage(10, 0, TStages.AGENT_MOVING);
     }

@@ -84,11 +84,13 @@ public class TFatherRole extends TRole {
                 Set<String> trainTypes = Set.of(TGettingOnTransportationRule.ANY); // 乗車する列車の種類の条件：全ての種類の列車に乗る．
                 Set<String> trainDestinations = Set.of(TGettingOnTransportationRule.ANY); // 乗車する列車の行き先の条件：全ての行き先の列車に乗る．
                 // 6:55に自宅を出発して乗車駅に向かう．
-                registerRule(new TRuleOfMoving(LEAVE_HOME, this, fHome, TSpotTypes.MIDWAY_SPOT, new TTime(0, 0, 5),
+                registerRule(new TRuleOfMoving(LEAVE_HOME, this, fHome, TSpotTypes.MIDWAY_SPOT
+                                + "1", new TTime(0, 0, 5),
                                 TStages.AGENT_MOVING, REACH_STATION));
                 getRule(LEAVE_HOME).setTimeAndStage(6, 55, TStages.AGENT_MOVING);
                 // 7:00に乗車駅に到着する
-                registerRule(new TRuleOfMovingStation(REACH_STATION, this, TSpotTypes.MIDWAY_SPOT, fSrcStation,
+                registerRule(new TRuleOfMovingStation(REACH_STATION, this, TSpotTypes.MIDWAY_SPOT
+                                + "1", fSrcStation,
                                 TStages.AGENT_MOVING, GETON_TRANSPORTATION));
                 // 最初に来た電車にのる
                 registerRule(new TGettingOnTransportationRule(GETON_TRANSPORTATION, this, fSrcStation, fLine, direction,
@@ -99,10 +101,12 @@ public class TFatherRole extends TRole {
                                 new TTime(0, 0, 3),
                                 TStages.AGENT_MOVING, GO_COMPANY));
                 // // 7:33に降車駅を出発して会社に向かう．
-                registerRule(new TRuleOfMoving(GO_COMPANY, this, fDstStation, TSpotTypes.MIDWAY_SPOT,
+                registerRule(new TRuleOfMoving(GO_COMPANY, this, fDstStation, TSpotTypes.MIDWAY_SPOT
+                                + "1",
                                 new TTime(0, 0, 10), TStages.AGENT_MOVING, REACH_COMPANY));
                 // // 7:43に会社に到着する
-                registerRule(new TRuleOfMoving(REACH_COMPANY, this, TSpotTypes.MIDWAY_SPOT, TSpotTypes.COMPANY));
+                registerRule(new TRuleOfMoving(REACH_COMPANY, this, TSpotTypes.MIDWAY_SPOT
+                                + "1", TSpotTypes.COMPANY + "1"));
         }
 
         private void moveFromCompanyToHome() {
@@ -110,11 +114,15 @@ public class TFatherRole extends TRole {
                 Set<String> trainTypes = Set.of(TGettingOnTransportationRule.ANY); // 乗車する列車の種類の条件：全ての種類の列車に乗る．
                 Set<String> trainDestinations = Set.of(TGettingOnTransportationRule.ANY); // 乗車する列車の行き先の条件：全ての行き先の列車に乗る．
                 // 17:55に会社を出発して乗車駅に向かう．
-                registerRule(new TRuleOfMoving(LEAVE_COMPANY, this, TSpotTypes.COMPANY, TSpotTypes.MIDWAY_SPOT,
+                registerRule(new TRuleOfMoving(LEAVE_COMPANY, this, TSpotTypes.COMPANY
+                                + "1",
+                                TSpotTypes.MIDWAY_SPOT
+                                                + "1",
                                 new TTime(0, 0, 10), TStages.AGENT_MOVING, REACH_STATION_BACK));
                 getRule(LEAVE_COMPANY).setTimeAndStage(17, 55, TStages.AGENT_MOVING);
                 // 18:05に乗車駅に到着する．
-                registerRule(new TRuleOfMovingStation(REACH_STATION_BACK, this, TSpotTypes.MIDWAY_SPOT, fDstStation,
+                registerRule(new TRuleOfMovingStation(REACH_STATION_BACK, this, TSpotTypes.MIDWAY_SPOT
+                                + "1", fDstStation,
                                 TStages.AGENT_MOVING, GETON_TRANSPORTATION_BACK));
                 // 18:10に乗車駅で指定された列車に乗車する．
                 registerRule(new TGettingOnTransportationRule(GETON_TRANSPORTATION_BACK, this, fDstStation, fLine,
@@ -125,9 +133,10 @@ public class TFatherRole extends TRole {
                                 new TTime(0, 0, 5),
                                 TStages.AGENT_MOVING, GO_HOME));
                 // 降車駅を出発して自宅に向かう．
-                registerRule(new TRuleOfMoving(GO_HOME, this, fSrcStation, TSpotTypes.MIDWAY_SPOT, new TTime(0, 0, 5),
+                registerRule(new TRuleOfMoving(GO_HOME, this, fSrcStation, TSpotTypes.MIDWAY_SPOT
+                                + "1", new TTime(0, 0, 5),
                                 TStages.AGENT_MOVING, REACH_HOME));
                 // 自宅に到着する．
-                registerRule(new TRuleOfMoving(REACH_HOME, this, TSpotTypes.MIDWAY_SPOT, fHome));
+                registerRule(new TRuleOfMoving(REACH_HOME, this, TSpotTypes.MIDWAY_SPOT + "1", fHome));
         }
 }

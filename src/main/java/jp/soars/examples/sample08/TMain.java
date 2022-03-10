@@ -13,8 +13,6 @@ import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
 import jp.soars.transportation.TTransportation;
 import jp.soars.transportation.TTransportationManager;
-import jp.soars.utils.random.ICRandom;
-import jp.soars.utils.random.TCJava48BitLcg;
 
 /**
  * メインクラス
@@ -28,8 +26,8 @@ public class TMain {
      */
     private static void createSpots(TSpotManager spotManager, int noOfSpots) {
         spotManager.createSpots(TSpotTypes.HOME, noOfSpots);
-        spotManager.createSpot(TSpotTypes.COMPANY);
-        spotManager.createSpot(TSpotTypes.MIDWAY_SPOT);
+        spotManager.createSpots(TSpotTypes.COMPANY, 1);
+        spotManager.createSpots(TSpotTypes.MIDWAY_SPOT, 1);
     }
 
     /**
@@ -79,7 +77,7 @@ public class TMain {
         createFatherAgents(agentManager, spotManager);
         /** スポットに滞在する人数の予測値 */
         int expectedMaxNumberOfAgents = 1;
-        TTransportationManager transportationManager = new TTransportationManager("transportationDB", spotManager,
+        new TTransportationManager("transportationDB", spotManager,
                 model.getRuleAggregator(), model.getRandom(), false, expectedMaxNumberOfAgents);
         TTime simulationPeriod = new TTime("2/0:00"); // シミュレーション終了時刻
         PrintWriter printWriter = new PrintWriter(logDir + File.separator + "spot.csv");

@@ -23,9 +23,9 @@ public class TMain {
      */
     private static void createSpots(TSpotManager spotManager, int noOfHomes) {
         spotManager.createSpots(TSpotTypes.HOME, noOfHomes);// noOfHomes個の家スポットを生成する．名前は，home1, home2, ...となる．
-        spotManager.createSpot(TSpotTypes.COMPANY);// 1個の会社スポットを生成する，名前は，company (=TSpots.COMPANY)となる．
-        spotManager.createSpot(TSpotTypes.SCHOOL);// 1個の学校スポットを生成する．
-        spotManager.createSpot(TSpotTypes.HOSPITAL);// 1個の病院スポットを生成する．
+        spotManager.createSpots(TSpotTypes.COMPANY, 1);// 1個の会社スポットを生成する，名前は，company (=TSpots.COMPANY)となる．
+        spotManager.createSpots(TSpotTypes.SCHOOL, 1);// 1個の学校スポットを生成する．
+        spotManager.createSpots(TSpotTypes.HOSPITAL, 1);// 1個の病院スポットを生成する．
     }
 
     /**

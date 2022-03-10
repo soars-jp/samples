@@ -32,7 +32,7 @@ public class TMain {
         int noOfHomes = 3; // 家の数
         TSpotManager spotManager = model.getSpotManager(); // スポット管理
         spotManager.createSpots(TSpotTypes.HOME, noOfHomes); // noOfHomes個の家スポットを生成する．名前は，home1, home2, ...となる．
-        spotManager.createSpot(TSpotTypes.COMPANY); // 1個の会社スポットを生成する，名前は，company (=TSpots.COMPANY)となる．
+        spotManager.createSpots(TSpotTypes.COMPANY, 1); // 1個の会社スポットを生成する，名前は，company (=TSpots.COMPANY)となる．
         // エージェントの初期化
         TAgentManager agentManager = model.getAgentManager(); // エージェント管理
         ArrayList<TAgent> fathers = agentManager.createAgents(TAgentTypes.FATHER, noOfHomes); // noOfHomes体の父親エージェントを生成する．名前は，father1,

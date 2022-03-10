@@ -13,8 +13,6 @@ import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
 import jp.soars.transportation.TTransportation;
 import jp.soars.transportation.TTransportationManager;
-import jp.soars.utils.random.ICRandom;
-import jp.soars.utils.random.TCJava48BitLcg;
 
 /**
  * メインクラス．
@@ -28,8 +26,8 @@ public class TMain {
      */
     private static void createSpots(TSpotManager spotManager, int noOfSpots) {
         spotManager.createSpots(TSpotTypes.HOME, noOfSpots);
-        spotManager.createSpot(TSpotTypes.COMPANY);
-        spotManager.createSpot(TSpotTypes.MIDWAY_SPOT);
+        spotManager.createSpots(TSpotTypes.COMPANY, 1);
+        spotManager.createSpots(TSpotTypes.MIDWAY_SPOT, 1);
     }
 
     /**
@@ -80,7 +78,7 @@ public class TMain {
         createFatherAgents(agentManager, spotManager);
         /** スポットに滞在する人数の予測値 */
         int expectedMaxNumberOfAgents = 5;
-        TTransportationManager transportationManager = new TTransportationManager("transportationDB", spotManager,
+        new TTransportationManager("transportationDB", spotManager,
                 model.getRuleAggregator(), model.getRandom(), false, expectedMaxNumberOfAgents);
         // エージェントの初期化
         // メインループ： 0日0時0分から3日23時まで1時間単位でまわす．

@@ -27,9 +27,10 @@ public class TFatherRole extends TRole {
         super(ROLE_NAME, ownerAgent); // 親クラスのコンストラクタを呼び出す．
         // 自宅にいるならば，会社に移動し，32時間後のエージェント移動ステージにreturn_homeルールを実行するように予約する．
         registerRule(
-                new TRuleOfMoving(LEAVE_HOME, this, home, TSpotTypes.COMPANY, 32, TStages.AGENT_MOVING, RETURN_HOME));
+                new TRuleOfMoving(LEAVE_HOME, this, home, TSpotTypes.COMPANY
+                        + "1", 32, TStages.AGENT_MOVING, RETURN_HOME));
         // 会社にいるならば，自宅に移動する．
-        registerRule(new TRuleOfMoving(RETURN_HOME, this, TSpotTypes.COMPANY, home));
+        registerRule(new TRuleOfMoving(RETURN_HOME, this, TSpotTypes.COMPANY + "1", home));
         // 毎日9時，エージェントステージにLEAVE_HOMEルールが発火するように予約する．
         getRule(LEAVE_HOME).setTimeAndStage(9, 0, TStages.AGENT_MOVING);
     }
