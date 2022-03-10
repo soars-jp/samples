@@ -21,11 +21,11 @@ public class TMain {
     /**
      * スポットを生成する
      * 
-     * @param spotManager
-     * @param noOfHomes
+     * @param spotManager スポット管理
+     * @param noOfHomes   自宅数
      */
-    private static void createSpots(TSpotManager spotManager, int noOfSpots) {
-        spotManager.createSpots(TSpotTypes.HOME, noOfSpots);
+    private static void createSpots(TSpotManager spotManager, int noOfHomes) {
+        spotManager.createSpots(TSpotTypes.HOME, noOfHomes);
         spotManager.createSpots(TSpotTypes.COMPANY, 1);
         spotManager.createSpots(TSpotTypes.MIDWAY_SPOT, 1);
     }
@@ -33,11 +33,11 @@ public class TMain {
     /**
      * 父親エージェントを生成する
      * 
-     * @param args
-     * @throws IOException
+     * @param agentManager エージェント管理
+     * @param spotManager  スポット管理
+     * @param noOfAgents   エージェント数
      */
-    private static void createFatherAgents(TAgentManager agentManager, TSpotManager spotManager) {
-        int noOfAgents = 5;
+    private static void createFatherAgents(TAgentManager agentManager, TSpotManager spotManager, int noOfAgents) {
         ArrayList<TAgent> fathers = agentManager.createAgents(TAgentTypes.FATHER, noOfAgents);
         // それぞれの父親はstation2,station3,station4,..から通勤する
         for (int i = 0; i < fathers.size(); i++) {
@@ -73,9 +73,9 @@ public class TMain {
         TSpotManager spotManager = model.getSpotManager(); // スポット管理
         // エージェントの初期化
         TAgentManager agentManager = model.getAgentManager(); // エージェント管理
-
         createSpots(spotManager, noOfSpots);
-        createFatherAgents(agentManager, spotManager);
+        // noOfSpotsと同じ数の父親を生成する
+        createFatherAgents(agentManager, spotManager, noOfSpots);
         /** スポットに滞在する人数の予測値 */
         int expectedMaxNumberOfAgents = 5;
         new TTransportationManager("transportationDB", spotManager,
@@ -88,8 +88,7 @@ public class TMain {
             printWriter.print(model.getTime() + "\t"); // 時刻を表示する．
             model.execute(); // モデルの実行
             for (TAgent a : agentManager.getAgents()) {
-                printWriter.print(a.getCurrentSpotName() + "\t"); //
-                // 各エージェントが位置しているスポット名を表示する．
+                printWriter.print(a.getCurrentSpotName() + "\t"); // 各エージェントが位置しているスポット名を表示する．
             }
             printWriter.println();
         }

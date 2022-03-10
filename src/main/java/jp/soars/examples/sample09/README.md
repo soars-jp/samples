@@ -266,3 +266,15 @@ public class TFatherRole extends TRole {
         }
 }
 ```
+#### メインクラスの定義
+
+メインクラスは，mainメソッドの他に，スポットを生成するcreateSpotsメソッド，父親エージェントを生成するcreateFatherAgentsメソッドを持つ．
+
+列車については，以下のようにtransportation.TTransportationManagerクラスのオブジェクトを生成すればよい．transportation.TTransportationManagerクラスのオブジェクトを生成すると，列車情報が読み込まれて，列車に関するルールがルール収集器に登録される．コンストラクタの引数は，順に，列車情報が収められているディレクトリ，スポット管理，ルール収集器，乱数発生器である．
+
+その他の詳細については，ソース中のコメントを参照されたい．メインクラスのソースコードを以下に示す．
+
+`TMain.java`
+
+```java
+```
