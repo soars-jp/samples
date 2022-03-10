@@ -47,6 +47,7 @@ Github-Account-Nameを自分のGitHubアカウント名，Github-Account-Token�
 - [サンプル8：列車への乗車（絶対時刻指定）](./src/main/java/jp/soars/examples/sample08)
 - [サンプル9：サンプル8の修正（列車への乗車の相対時刻指定）](./src/main/java/jp/soars/examples/sample09)
 ## 履歴
+- 2022/03/10 sample9の父親の人数を5人に増やした
 - 2021/11/14 README.mdにsettings.xmlの設定情報を追加した．
 - 2021/11/02 ライブラリの変更にともない，sample7を更新．
 - 2021/10/31 sample7を作成した．
