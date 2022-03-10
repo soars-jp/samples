@@ -28,6 +28,15 @@ public class TStocasticallyMovingRule extends TAgentRule {
     /** 移動確率 */
     private double fProbability;
 
+    /**
+     * コンストラクタ
+     * 
+     * @param ruleName        ルール名
+     * @param ownerRole       ルールを持つ役割
+     * @param sourceSpot      出発地
+     * @param destinationSpot 目的地
+     * @param probability     移動確率
+     */
     public TStocasticallyMovingRule(String ruleName, TRole ownerRole, String sourceSpot, String destinationSpot,
             double probability) {
         super(ruleName, ownerRole);
@@ -42,14 +51,14 @@ public class TStocasticallyMovingRule extends TAgentRule {
     /**
      * コンストラクタ． 絶対時刻を指定する．次のルールを指定する
      * 
-     * @param ruleName
-     * @param ownerRole
-     * @param sourceSpot
-     * @param destinationSpot
-     * @param timeToNextRule
-     * @param stageOfNextRule
-     * @param nextRule
-     * @param probability
+     * @param ruleName        ルール名
+     * @param ownerRole       ルールを持つ役割
+     * @param sourceSpot      出発地
+     * @param destinationSpot 目的地
+     * @param timeToNextRule  次のルールを実行するまでの時間
+     * @param stageOfNextRule 次のルールを実行するステージ
+     * @param nextRule        次のルール名
+     * @param probability     移動確率
      */
     public TStocasticallyMovingRule(String ruleName, TRole ownerRole, String sourceSpot, String destinationSpot,
             int timeToNextRule, String stageOfNextRule, String nextRule, double probability) {

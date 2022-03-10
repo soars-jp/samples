@@ -15,28 +15,33 @@ import jp.soars.utils.random.ICRandom;
 public class TKillerRule extends TAgentRule {
 
     /** ルール名 */
-	public static String RULE_NAME = "KillerRule";
+    public static String RULE_NAME = "KillerRule";
 
     /** デバッグ情報として削除(しようとした)エージェント名とスポット名を出力する */
     private String fSpotName = "";
     private String fAgentName = "";
 
+    /**
+     * 削除ルール
+     * 
+     * @param ownerRole ルールを持つ役割
+     */
     public TKillerRule(TRole ownerRole) {
         super(RULE_NAME, ownerRole);
     }
 
     @Override
-    public void doIt(TTime currentTime, String currentStage, TSpotManager spotManager, 
-                     TAgentManager agentManager, HashMap<String, Object> globalSharedVariables){
+    public void doIt(TTime currentTime, String currentStage, TSpotManager spotManager,
+            TAgentManager agentManager, HashMap<String, Object> globalSharedVariables) {
         ICRandom rand = getOwnerRole().getRandom();
-        //ダミースポットをランダムに１つ削除
+        // ダミースポットをランダムに１つ削除
         List<TSpot> dummySpotList = spotManager.getSpots(TSpotTypes.DUMMY_SPOT);
         TSpot spot = dummySpotList.get(rand.nextInt(dummySpotList.size()));
         fSpotName = spot.getName();
-        if(spot.getAgents().isEmpty()){ //エージェントがいるスポットを消そうとするとエラー
-            spotManager.deleteSpot(spot); 
+        if (spot.getAgents().isEmpty()) { // エージェントがいるスポットを消そうとするとエラー
+            spotManager.deleteSpot(spot);
         }
-        //ダミーエージェントをランダムに１つ削除
+        // ダミーエージェントをランダムに１つ削除
         List<TAgent> dummyAgentList = agentManager.getAgents(TAgentTypes.DUMMY_AGENT);
         TAgent agent = dummyAgentList.get(rand.nextInt(dummyAgentList.size()));
         agentManager.deleteAgent(agent);
@@ -44,7 +49,7 @@ public class TKillerRule extends TAgentRule {
     }
 
     @Override
-    public String debugInfo(){
+    public String debugInfo() {
         return "spot:" + fSpotName + " agent:" + fAgentName;
     }
 }

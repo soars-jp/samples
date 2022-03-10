@@ -23,11 +23,11 @@ public class TMain {
     /**
      * スポットを生成する
      * 
-     * @param spotManager
-     * @param noOfHomes
+     * @param spotManager スポット管理
+     * @param noOfHomes   自宅数
      */
-    private static void createSpots(TSpotManager spotManager, int noOfSpots) {
-        spotManager.createSpots(TSpotTypes.SPOT, noOfSpots);
+    private static void createSpots(TSpotManager spotManager, int noOfHomes) {
+        spotManager.createSpots(TSpotTypes.SPOT, noOfHomes);
     }
 
     /**
@@ -51,10 +51,8 @@ public class TMain {
         TSpotManager spotManager = model.getSpotManager(); // スポット管理
         // エージェントの初期化
         TAgentManager agentManager = model.getAgentManager(); // エージェント管理
-
         createSpots(spotManager, noOfSpots);
         ArrayList<TSpot> spotList = spotManager.getSpots();
-
         // エージェントの初期化
         int noOfAgents = 300;
         ArrayList<TAgent> agents = agentManager.createAgents(TAgentTypes.AGENT, noOfAgents);

@@ -78,20 +78,25 @@ public class TMain {
         createFatherAgents(agentManager, spotManager, noOfSpots);
         /** スポットに滞在する人数の予測値 */
         int expectedMaxNumberOfAgents = 5;
-        new TTransportationManager("transportationDB", spotManager,
+        TTransportationManager transportationManager = new TTransportationManager("transportationDB", spotManager,
                 model.getRuleAggregator(), model.getRandom(), false, expectedMaxNumberOfAgents);
         // エージェントの初期化
         // メインループ： 0日0時0分から3日23時まで1時間単位でまわす．
         TTime simulationPeriod = new TTime("2/0:00"); // シミュレーション終了時刻
         PrintWriter printWriter = new PrintWriter(logDir + File.separator + "spot.csv");
+        TTransportationLogger transportationLogger = new TTransportationLogger(
+                logDir + File.separator + "transportationSpot.csv", transportationManager);
         while (model.getTime().isLessThan(simulationPeriod)) {
-            printWriter.print(model.getTime() + "\t"); // 時刻を表示する．
+            TTime t = model.getTime().clone();
+            printWriter.print(t + "\t"); // 時刻を表示する．
             model.execute(); // モデルの実行
             for (TAgent a : agentManager.getAgents()) {
                 printWriter.print(a.getCurrentSpotName() + "\t"); // 各エージェントが位置しているスポット名を表示する．
             }
             printWriter.println();
+            transportationLogger.output(t);
         }
         printWriter.close();
+        transportationLogger.close();
     }
 }
