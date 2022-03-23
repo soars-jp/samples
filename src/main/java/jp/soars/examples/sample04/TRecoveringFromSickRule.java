@@ -21,7 +21,7 @@ public class TRecoveringFromSickRule extends TAgentRule {
     private String fHome;
 
     /** 回復後に設定する役割 */
-    public String fBackRole;
+    private String fBackRole;
 
     /**
      * コンストラクタ
