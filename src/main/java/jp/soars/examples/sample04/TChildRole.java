@@ -6,7 +6,7 @@ import jp.soars.core.TRole;
 /** 子供役割 */
 public class TChildRole extends TRole {
     /** 役割名 */
-    public static final String ROLE_NAME = "FatherRole";
+    public static final String ROLE_NAME = "ChildRole";
 
     /** 家を出発する */
     public static final String LEAVE_HOME = "leave_home";

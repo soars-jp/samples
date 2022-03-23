@@ -1,6 +1,8 @@
 package jp.soars.examples.sample04;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +67,7 @@ public class TMain {
      * @param noOfHomes    自宅数
      */
     private static void createChildAgents(TAgentManager agentManager, TSpotManager spotManager, int noOfHomes) {
-        ArrayList<TAgent> children = agentManager.createAgents(TAgentTypes.FATHER, noOfHomes);
+        ArrayList<TAgent> children = agentManager.createAgents(TAgentTypes.CHILD, noOfHomes);
         // noOfHomes体の子供エージェントを生成する．名前は，child1, child2, ...となる．
         for (int i = 0; i < children.size(); i++) {
             TAgent child = children.get(i);// i番目のエージェントを取り出す．
@@ -92,6 +94,8 @@ public class TMain {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
+        // ログを収集するディレクトリ
+        String logDir = "logs/sample04";
         // ステージの初期化
         List<String> stages = List.of(TStages.AGENT_MOVING); // ステージは，エージェント移動のみ．
         // モデルの生成
@@ -107,13 +111,16 @@ public class TMain {
         createChildAgents(agentManager, spotManager, noOfHomes);// 子供エージェントの初期化
         // メインループ： 0日0時0分から6日23時まで1時間単位でまわす．
         TTime simulationPeriod = new TTime("7/0:00"); // シミュレーション終了時刻
+        PrintWriter printWriter = new PrintWriter(logDir + File.separator + "spot.csv");
         while (model.getTime().isLessThan(simulationPeriod)) {
-            System.out.print(model.getTime() + "\t"); // 時刻を表示する．
+            printWriter.print(model.getTime() + "\t"); // 時刻を表示する．
             model.execute(); // モデルの実行
             for (TAgent a : agentManager.getAgents()) {
-                System.out.print(a.getCurrentSpotName() + "\t"); // 各エージェントが位置しているスポット名を表示する．
+                printWriter.print(a.getCurrentSpotName() + "\t"); //
+                // 各エージェントが位置しているスポット名を表示する．
             }
-            System.out.println();
+            printWriter.println();
         }
+        printWriter.close();
     }
 }

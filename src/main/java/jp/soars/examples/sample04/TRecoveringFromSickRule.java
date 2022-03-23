@@ -16,11 +16,12 @@ public class TRecoveringFromSickRule extends TAgentRule {
 
     /** 病院 */
     private String fHospital;
+
     /** 自宅 */
     private String fHome;
 
     /** 回復後に設定する役割 */
-    public static String fBackRole;
+    public String fBackRole;
 
     /**
      * コンストラクタ
@@ -29,6 +30,7 @@ public class TRecoveringFromSickRule extends TAgentRule {
      * @param ownerRole このルールをもつ役割
      * @param hospital  病院
      * @param home      自宅
+     * @param backRole  回復後に設定する役割
      */
     public TRecoveringFromSickRule(String ruleName, TRole ownerRole, String hospital, String home, String backRole) {
         super(ruleName, ownerRole);
