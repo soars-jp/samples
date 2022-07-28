@@ -11,8 +11,9 @@ import jp.soars.core.TAgentManager;
 import jp.soars.core.TModel;
 import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
-import jp.soars.transportation.TTransportation;
-import jp.soars.transportation.TTransportationManager;
+import jp.soars.core.generator.IObjectGenerator;
+import jp.soars.transportation.TTransportationAndStationGenerator;
+import jp.soars.transportation.TTransportationStages;
 
 /**
  * メインクラス．
@@ -60,10 +61,10 @@ public class TMain {
         String logDir = "logs/sample09";
         // ステージとその実行順序の定義：
         // 始発列車のスポット集合への登録 => 列車到着 => エージェント移動 => 列車出発 => 終着列車のスポット集合からの削除
-        List<String> stages = List.of(TTransportation.TStages.NEW_TRANSPORTATION,
-                TTransportation.TStages.TRANSPORTATION_ARRIVING,
-                TStages.AGENT_MOVING, TTransportation.TStages.TRANSPORTATION_LEAVING,
-                TTransportation.TStages.DELETING_TRANSPORTATION);
+        List<String> stages = List.of(TTransportationStages.NEW_TRANSPORTATION,
+                TTransportationStages.TRANSPORTATION_ARRIVING,
+                TStages.AGENT_MOVING, TTransportationStages.TRANSPORTATION_LEAVING,
+                TTransportationStages.DELETING_TRANSPORTATION);
         // モデルの生成
         int interval = 1; // １ステップの分数
         long seed = 0; // 乱数シード
@@ -76,16 +77,16 @@ public class TMain {
         createSpots(spotManager, noOfSpots);
         // noOfSpotsと同じ数の父親を生成する
         createFatherAgents(agentManager, spotManager, noOfSpots);
-        /** スポットに滞在する人数の予測値 */
-        int expectedMaxNumberOfAgents = 5;
-        TTransportationManager transportationManager = new TTransportationManager("transportationDB", spotManager,
-                model.getRuleAggregator(), model.getRandom(), false, expectedMaxNumberOfAgents);
+
+        IObjectGenerator generator = new TTransportationAndStationGenerator("transportationDB",
+                model.getRuleAggregator(), true, model.getRandom());
+        spotManager.createSpots(generator);
         // エージェントの初期化
         // メインループ： 0日0時0分から3日23時まで1時間単位でまわす．
         TTime simulationPeriod = new TTime("2/0:00"); // シミュレーション終了時刻
         PrintWriter printWriter = new PrintWriter(logDir + File.separator + "spot.csv");
         TTransportationLogger transportationLogger = new TTransportationLogger(
-                logDir + File.separator + "transportationSpot.csv", transportationManager);
+                logDir + File.separator + "transportationSpot.csv", spotManager);
         while (model.getTime().isLessThan(simulationPeriod)) {
             TTime t = model.getTime().clone();
             printWriter.print(t + "\t"); // 時刻を表示する．

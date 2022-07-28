@@ -1,7 +1,7 @@
 package jp.soars.examples.sample06;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 import jp.soars.core.TAgentManager;
 import jp.soars.core.TAgentRule;
@@ -59,7 +59,7 @@ public class TRandomlyMovingRule extends TAgentRule {
 
     @Override
     public void doIt(TTime currentTime, String currentStage, TSpotManager spotManager, TAgentManager agentManager,
-            HashMap<String, Object> globalSharedVariables) {
+            Map<String, Object> globalSharedVariables) {
 
         if (isAt(fSpot)) { // スポット条件が満たされたら
             if (currentTime.isEqualTo(fEndTime)) {// 終了時刻ならば

@@ -81,6 +81,7 @@ public class TFatherRole extends TRole {
         registerRule(new TRuleOfMoving(REACH_STATION, this, TSpotTypes.MIDWAY_SPOT + "1", srcStation));
         getRule(REACH_STATION).setTimeAndStage(7, 0, TStages.AGENT_MOVING);
         // 7:05に電車にのる
+
         registerRule(new TGettingOnTransportationRule(GETON_TRANSPORTATION, this, srcStation, line,
                 direction,
                 trainName));

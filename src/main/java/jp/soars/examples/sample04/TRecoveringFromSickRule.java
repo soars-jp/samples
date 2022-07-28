@@ -1,6 +1,6 @@
 package jp.soars.examples.sample04;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import jp.soars.core.TAgent;
 import jp.soars.core.TAgentManager;
@@ -41,7 +41,7 @@ public class TRecoveringFromSickRule extends TAgentRule {
 
     @Override
     public void doIt(TTime currentTime, String stage, TSpotManager spotManager, TAgentManager agentManager,
-            HashMap<String, Object> globalSharedVariables) {
+            Map<String, Object> globalSharedVariables) {
         if (isAt(fHospital)) { // 病院にいるなら
             moveTo(spotManager.getSpotDB().get(fHome)); // 家に戻って．
             TAgent agent = getAgent();

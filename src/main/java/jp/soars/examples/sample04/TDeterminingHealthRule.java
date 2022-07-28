@@ -1,6 +1,6 @@
 package jp.soars.examples.sample04;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import jp.soars.core.TAgentManager;
 import jp.soars.core.TAgentRule;
@@ -47,7 +47,7 @@ public class TDeterminingHealthRule extends TAgentRule {
 
     @Override
     public void doIt(TTime currentTime, String stage, TSpotManager spotManager, TAgentManager agentManager,
-            HashMap<String, Object> globalSharedVariables) {
+            Map<String, Object> globalSharedVariables) {
         if (isAt(fSpot)) {
             if (getRandom().nextDouble() <= fProbability) { // スポット条件および移動確率条件が満たされたら，
                 fSick = true;// 病気になる

@@ -1,7 +1,7 @@
 package jp.soars.examples.sample07;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jp.soars.core.TAgent;
 import jp.soars.core.TAgentManager;
@@ -32,7 +32,7 @@ public class TKillerRule extends TAgentRule {
 
     @Override
     public void doIt(TTime currentTime, String currentStage, TSpotManager spotManager,
-            TAgentManager agentManager, HashMap<String, Object> globalSharedVariables) {
+            TAgentManager agentManager, Map<String, Object> globalSharedVariables) {
         ICRandom rand = getOwnerRole().getRandom();
         // ダミースポットをランダムに１つ削除
         List<TSpot> dummySpotList = spotManager.getSpots(TSpotTypes.DUMMY_SPOT);

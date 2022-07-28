@@ -1,6 +1,6 @@
 package jp.soars.examples.sample07;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import jp.soars.core.TAgent;
 import jp.soars.core.TAgentManager;
@@ -29,7 +29,7 @@ public class TCreatorRule extends TAgentRule {
 
     @Override
     public void doIt(TTime currentTime, String currentStage, TSpotManager spotManager,
-            TAgentManager agentManager, HashMap<String, Object> globalSharedVariables) {
+            TAgentManager agentManager, Map<String, Object> globalSharedVariables) {
         // 新たなスポットとエージェントの作成
         TSpot newSpot = spotManager.createSpots(TSpotTypes.DUMMY_SPOT, 1).get(0);
         TAgent newAgent = agentManager.createAgents(TAgentTypes.DUMMY_AGENT, 1).get(0);

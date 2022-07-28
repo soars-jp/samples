@@ -1,6 +1,7 @@
 package jp.soars.examples.sample09;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import jp.soars.core.TAgent;
 import jp.soars.core.TAgentRule;
@@ -73,7 +74,7 @@ public class TRuleOfMoving extends TAgentRule {
 
     @Override
     public void doIt(TTime currentTime, String stage, HashMap<String, TSpot> spotSet, HashMap<String, TAgent> agentSet,
-            HashMap<String, Object> globalSharedVariables) {
+            Map<String, Object> globalSharedVariables) {
         if (isAt(fSource)) { // 出発地にいたら，
             moveTo(spotSet.get(fDestination)); // 目的地へ移動する．
             if (fNextRule != null) { // 次に実行するルールが定義されていたら

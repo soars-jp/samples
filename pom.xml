@@ -35,8 +35,13 @@
   <dependencies>
     <dependency>
       <groupId>jp.soars</groupId>
-      <artifactId>soars-core</artifactId>
-      <version>220310_01</version>
+      <artifactId>soars-toolkit-core</artifactId>
+      <version>0.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>jp.soars</groupId>
+      <artifactId>soars-toolkit-transportation</artifactId>
+      <version>0.3.0</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

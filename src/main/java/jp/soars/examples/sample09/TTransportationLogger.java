@@ -4,18 +4,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 
+import jp.soars.core.TSpot;
+import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
 import jp.soars.transportation.TTransportation;
-import jp.soars.transportation.TTransportationManager;
 
 public class TTransportationLogger {
     /** 出力ストリーム */
     private PrintWriter fOut;
-
-    /** 列車管理 */
-    private TTransportationManager fTransportationManager;
+    private TSpotManager fSpotManager;
 
     /**
      * 各列車が位置するスポットをCSVファイルに出力する．
@@ -24,14 +22,14 @@ public class TTransportationLogger {
      * @param transportationManager 列車管理
      * @throws FileNotFoundException
      */
-    public TTransportationLogger(String filename, TTransportationManager transportationManager) throws FileNotFoundException {
-        fTransportationManager = transportationManager;
+    public TTransportationLogger(String filename, TSpotManager spotManager) throws FileNotFoundException {
+        fSpotManager = spotManager;
         fOut = new PrintWriter(filename);
         fOut.print("Time");
-        ArrayList<String> names = transportationManager.getSpotNamesOfTransportations();
-        for (String name : names) {
+        ArrayList<TSpot> spots = spotManager.getSpots("local");
+        for(TSpot spot : spots){
             fOut.print(",");
-            fOut.print(name);
+            fOut.print(spot.getName());
         }
         fOut.println();
     }
@@ -44,10 +42,10 @@ public class TTransportationLogger {
      */
     public void output(TTime t) throws IOException {
         fOut.print(t);
-        ArrayList<String> names = fTransportationManager.getSpotNamesOfTransportations();
-        HashMap<String, TTransportation> trainDB = fTransportationManager.getTransportationDB();
-        for (String name : names) {
-            TTransportation train = trainDB.get(name);
+        ArrayList<TSpot> spots = fSpotManager.getSpots("local");
+
+        for(TSpot spot : spots){
+            TTransportation train = (TTransportation) spot;
             fOut.print(",");
             if (train.isInService()) {
                 fOut.print(train.getCurrentSpotName());
