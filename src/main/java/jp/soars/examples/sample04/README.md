@@ -378,7 +378,7 @@ public class TMain {
      */
     public static void main(String[] args) throws IOException {
         // ステージの初期化
-        List<String> stages = List.of(TStages.DETERMINING_HEALTH, TStages.AGENT_MOVING); // ステージは，エージェント移動と健康状態決定とエージェント移動．
+        List<String> stages = List.of(TStages.DETERMINING_HEALTH, TStages.AGENT_MOVING); // ステージは，健康状態決定とエージェント移動．
         // モデルの生成
         int interval = 60; // １ステップの分数
         long seed = 0; // 乱数シード
