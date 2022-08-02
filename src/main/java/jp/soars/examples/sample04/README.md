@@ -218,7 +218,7 @@ public class TCommonRole extends TRole {
         super(ROLE_NAME, ownerAgent);// TAgentRuleのコンストラクタを呼び出す．
         // 健康状態決定ルール（6時，健康決定ステージ，自宅において，25%の確率で病気になる）を生成する．
         registerRule(new TDeterminingHealthRule(DETERMINE_HEALTH, this, home, 0.25));
-        getRule(DETERMINE_HEALTH).setTimeAndStage(6, 0, TStages.AGENT_MOVING);
+        getRule(DETERMINE_HEALTH).setTimeAndStage(6, 0, TStages.DETERMINING_HEALTH);
     }
 }
 ```
@@ -230,7 +230,7 @@ public class TCommonRole extends TRole {
 ```java
 public class TChildRole extends TRole {
     /** 役割名 */
-    public static final String ROLE_NAME = "FatherRole";
+    public static final String ROLE_NAME = "ChildRole";
 
     /** 家を出発する */
     public static final String LEAVE_HOME = "leave_home";
@@ -247,9 +247,9 @@ public class TChildRole extends TRole {
     public TChildRole(TAgent ownerAgent, String home) {
         super(ROLE_NAME, ownerAgent); // 親クラスのコンストラクタを呼び出す
         // 自宅にいるなら学校に移動する
-        registerRule(new TRuleOfMoving(LEAVE_HOME, this, home, TSpotTypes.SCHOOL));
+        registerRule(new TRuleOfMoving(LEAVE_HOME, this, home, TSpotTypes.SCHOOL + "1"));
         // 学校にいるならば，自宅に移動する．
-        registerRule(new TRuleOfMoving(RETURN_HOME, this, TSpotTypes.SCHOOL, home));
+        registerRule(new TRuleOfMoving(RETURN_HOME, this, TSpotTypes.SCHOOL + "1", home));
         // 毎日9時，エージェントステージにLEAVE_HOMEルールが発火するように予約する．
         getRule(LEAVE_HOME).setTimeAndStage(8, 0, TStages.AGENT_MOVING);
         getRule(RETURN_HOME).setTimeAndStage(15, 0, TStages.AGENT_MOVING);
@@ -281,9 +281,10 @@ public class TSickPersonRole extends TRole {
      */
     public TSickPersonRole(TAgent ownerAgent, String home, int medicTTime, String backRole) {
         super(ROLE_NAME, ownerAgent); // 親クラスのコンストラクタを呼び出す．
-        registerRule(new TRuleOfMoving(GO_HOSPITAL, this, home, TSpotTypes.HOSPITAL, medicTTime, TStages.AGENT_MOVING,
+        registerRule(new TRuleOfMoving(GO_HOSPITAL, this, home, TSpotTypes.HOSPITAL
+                + "1", medicTTime, TStages.AGENT_MOVING,
                 RECOVER));// 10時に自宅から病院に移動する
-        registerRule(new TRecoveringFromSickRule(RECOVER, this, TSpotTypes.HOSPITAL, home, backRole));
+        registerRule(new TRecoveringFromSickRule(RECOVER, this, TSpotTypes.HOSPITAL + "1", home, backRole));
         // 病院に到着してから，時間が診察時間経過したら，自宅に戻って，役割を戻す．
         getRule(GO_HOSPITAL).setTimeAndStage(10, 0, TStages.AGENT_MOVING);
     }
@@ -377,7 +378,7 @@ public class TMain {
      */
     public static void main(String[] args) throws IOException {
         // ステージの初期化
-        List<String> stages = List.of(TStages.AGENT_MOVING); // ステージは，エージェント移動のみ．
+        List<String> stages = List.of(TStages.DETERMINING_HEALTH, TStages.AGENT_MOVING); // ステージは，エージェント移動と健康状態決定とエージェント移動．
         // モデルの生成
         int interval = 60; // １ステップの分数
         long seed = 0; // 乱数シード

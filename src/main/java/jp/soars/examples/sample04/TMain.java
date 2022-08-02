@@ -97,7 +97,7 @@ public class TMain {
         // ログを収集するディレクトリ
         String logDir = "logs/sample04";
         // ステージの初期化
-        List<String> stages = List.of(TStages.AGENT_MOVING); // ステージは，エージェント移動のみ．
+        List<String> stages = List.of(TStages.DETERMINING_HEALTH, TStages.AGENT_MOVING); // ステージは，エージェント移動と健康状態決定とエージェント移動．
         // モデルの生成
         int interval = 60; // １ステップの分数
         long seed = 0; // 乱数シード

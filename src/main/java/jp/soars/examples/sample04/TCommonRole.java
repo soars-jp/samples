@@ -22,6 +22,6 @@ public class TCommonRole extends TRole {
         super(ROLE_NAME, ownerAgent);// TAgentRuleのコンストラクタを呼び出す．
         // 健康状態決定ルール（6時，健康決定ステージ，自宅において，25%の確率で病気になる）を生成する．
         registerRule(new TDeterminingHealthRule(DETERMINE_HEALTH, this, home, 0.25));
-        getRule(DETERMINE_HEALTH).setTimeAndStage(6, 0, TStages.AGENT_MOVING);
+        getRule(DETERMINE_HEALTH).setTimeAndStage(6, 0, TStages.DETERMINING_HEALTH);
     }
 }
