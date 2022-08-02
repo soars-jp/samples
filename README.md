@@ -80,6 +80,7 @@ git config --global user.email "hoge@hoge.jp"
 - [サンプル8：列車への乗車（絶対時刻指定）](./src/main/java/jp/soars/examples/sample08)
 - [サンプル9：サンプル8の修正（列車への乗車の相対時刻指定）](./src/main/java/jp/soars/examples/sample09)
 ## 履歴
+- 2022/08/02 sample4の修正
 - 2022/07/22 soars-core220722_01に対応．station.csvにTypeカラムを追加．pom.xmlの更新．
 - 2022/03/23 sample4のバグを修正
 - 2022/03/10 sample9の父親の人数を5人に増やした
