@@ -3,9 +3,11 @@ package jp.soars.examples.sample09;
 import java.util.HashMap;
 
 import jp.soars.core.TAgent;
+import jp.soars.core.TAgentManager;
 import jp.soars.core.TAgentRule;
 import jp.soars.core.TRole;
 import jp.soars.core.TSpot;
+import jp.soars.core.TSpotManager;
 import jp.soars.core.TTime;
 
 /**
@@ -72,10 +74,10 @@ public class TRuleOfMoving extends TAgentRule {
     }
 
     @Override
-    public void doIt(TTime currentTime, String stage, HashMap<String, TSpot> spotSet, HashMap<String, TAgent> agentSet,
+    public void doIt(TTime currentTime, String stage, TSpotManager spotManager, TAgentManager agentManager,
             HashMap<String, Object> globalSharedVariables) {
         if (isAt(fSource)) { // 出発地にいたら，
-            moveTo(spotSet.get(fDestination)); // 目的地へ移動する．
+            moveTo(spotManager.getSpotDB().get(fDestination)); // 目的地へ移動する．
             if (fNextRule != null) { // 次に実行するルールが定義されていたら
                 fNextTime.copyFrom(currentTime).add(fTimeToNextRule);
                 getRule(fNextRule).setTimeAndStage(false, fNextTime, fStageOfNextRule);
