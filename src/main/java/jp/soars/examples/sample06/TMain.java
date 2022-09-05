@@ -38,8 +38,6 @@ public class TMain {
     public static void main(String[] args) throws IOException {
         // ログを収集するディレクトリ
         String logDir = "logs/sample06";
-        // 乱数生成
-        ICRandom rand = new TCJava48BitLcg();
         // ステージの初期化
         List<String> stages = List.of(TStages.AGENT_MOVING); // ステージは，エージェント移動のみ．
         // モデルの生成
@@ -58,7 +56,7 @@ public class TMain {
         ArrayList<TAgent> agents = agentManager.createAgents(TAgentTypes.AGENT, noOfAgents);
         for (int i = 0; i < agents.size(); i++) {
             TAgent agent = agents.get(i);
-            TSpot initialSpot = spotList.get(rand.nextInt(spotList.size()));
+            TSpot initialSpot = spotList.get(model.getRandom().nextInt(spotList.size()));
             TAgentRole agentRole = new TAgentRole(agent, initialSpot, spotList);
             agent.addRole(agentRole);
             agent.activateRole(agentRole.getName());
