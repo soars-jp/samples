@@ -36,7 +36,7 @@
     <dependency>
       <groupId>jp.soars</groupId>
       <artifactId>soars-core</artifactId>
-      <version>220722_01</version>
+      <version>220910_01</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
