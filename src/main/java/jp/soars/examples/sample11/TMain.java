@@ -58,7 +58,7 @@ public class TMain {
         ArrayList<TAgent> agents = agentManager.createAgents(TAgentTypes.AGENT, noOfAgents);
         // エージェント管理
         for (int i = 0; i < agents.size(); i++) {
-            String layerName = layers.get(i);
+            String layerName = layers.get(i);// i番目のレイヤを取り出す．
             ArrayList<TSpot> spotList = spotManager.getSpotLayers(layerName);
             TAgent agent = agents.get(i);// i番目のエージェントを取り出す．
             TSpot initialSpot = spotList.get(model.getRandom().nextInt(spotList.size()));
