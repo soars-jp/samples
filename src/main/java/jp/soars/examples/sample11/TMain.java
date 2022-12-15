@@ -23,11 +23,12 @@ public class TMain {
      *
      * @param spotManager スポット管理
      * @param noOfHomes   スポット数
+     * @param layers      レイヤのリスト
      */
     private static void createSpots(TSpotManager spotManager, int noOfSpots, List<String> layers) {
         for (String layerName : layers) {
             spotManager.createSpots(TSpotTypes.SPOT, noOfSpots, layerName);
-            // noOfSpots個のスポットを生成
+            // 指定したレイヤ（layerName）に対して，noOfSpots個のスポットを生成
         }
     }
 
