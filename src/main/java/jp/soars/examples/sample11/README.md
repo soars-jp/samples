@@ -10,7 +10,7 @@
 #### シナリオとシミュレーション条件
 
 以下のシナリオを考える．
-- 2体のエージェント(agent1〜agent2)が，1体ずつの2つのレイヤにそれぞれ配置し，3個のスポット(spot1からspot3)上をランダムに動き回る．
+- 2体のエージェント(agent1〜agent2)と2つのレイヤ(layer1〜layer2)が存在する．各レイヤに対してそれぞれエージェントを1体ずつ配置し，3個のスポット(spot1からspot3)上をランダムに動き回る．
 - エージェントは，10分おきにランダムに決定したスポットへ移動する．
 
 シミュレーション条件は以下の通りである．
@@ -155,12 +155,12 @@ public class TMain {
      *
      * @param spotManager スポット管理
      * @param noOfHomes   スポット数
+     * @param layers      レイヤのリスト
      */
-    private static void createSpots(TSpotManager spotManager, int noOfSpots, int noOfSpotLayers) {
-        for(int i=0;i<noOfSpotLayers;i++){
-            String layerName = String.valueOf(i);
+    private static void createSpots(TSpotManager spotManager, int noOfSpots, List<String> layers) {
+        for (String layerName : layers) {
             spotManager.createSpots(TSpotTypes.SPOT, noOfSpots, layerName);
-            // noOfSpots個のスポットを生成
+            // 指定したレイヤ（layerName）に対して，noOfSpots個のスポットを生成
         }
     }
 
@@ -177,21 +177,21 @@ public class TMain {
         // モデルの生成
         int interval = 10; // １ステップの分数
         long seed = 0; // 乱数シード
-        int noOfSpotLayers = 2; // レイヤー数
-        TModel model = new TModel(stages, interval, seed, noOfSpotLayers);
+        List<String> layers = List.of("layer1", "layer2");
+        TModel model = new TModel(stages, interval, seed, layers);
         model.getRuleAggregator().makeStageAlwaysExecuted(TStages.AGENT_MOVING);
         int noOfSpots = 3; // 家の数
         TSpotManager spotManager = model.getSpotManager(); // スポット管理
         TAgentManager agentManager = model.getAgentManager(); // エージェント管理
 
-        createSpots(spotManager, noOfSpots, noOfSpotLayers);// スポットの初期化
+        createSpots(spotManager, noOfSpots, layers);// スポットの初期化
 
         // エージェントの初期化
         int noOfAgents = 2;// エージェント数
         ArrayList<TAgent> agents = agentManager.createAgents(TAgentTypes.AGENT, noOfAgents);
         // エージェント管理
         for (int i = 0; i < agents.size(); i++) {
-            String layerName = String.valueOf(i);
+            String layerName = layers.get(i);// i番目のレイヤを取り出す．
             ArrayList<TSpot> spotList = spotManager.getSpotLayers(layerName);
             TAgent agent = agents.get(i);// i番目のエージェントを取り出す．
             TSpot initialSpot = spotList.get(model.getRandom().nextInt(spotList.size()));
