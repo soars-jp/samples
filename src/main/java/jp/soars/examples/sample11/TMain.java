@@ -27,7 +27,7 @@ public class TMain {
      */
     private static void createSpots(TSpotManager spotManager, int noOfSpots, List<String> layers) {
         for (String layerName : layers) {
-            spotManager.createSpots(TSpotTypes.SPOT, noOfSpots, layerName);
+            spotManager.createSpots(layerName, TSpotTypes.SPOT, noOfSpots);
             // 指定したレイヤ（layerName）に対して，noOfSpots個のスポットを生成
         }
     }
@@ -46,7 +46,7 @@ public class TMain {
         int interval = 10; // １ステップの分数
         long seed = 0; // 乱数シード
         List<String> layers = List.of("layer1", "layer2");
-        TModel model = new TModel(stages, interval, seed, layers);
+        TModel model = new TModel(layers, stages, interval, seed);
         model.getRuleAggregator().makeStageAlwaysExecuted(TStages.AGENT_MOVING);
         int noOfSpots = 3; // 家の数
         TSpotManager spotManager = model.getSpotManager(); // スポット管理
