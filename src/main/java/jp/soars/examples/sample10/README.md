@@ -4,9 +4,9 @@
 
 以下のシナリオを考える．
 
-- 10万人の父親は，それぞれ自宅を持つ．
-- 10万人の父親は，9:00に自宅からそれぞれの会社に移動する．
-- 10万人の父親は，17:00にそれぞれの自宅に移動する．
+- 1000人の父親は，それぞれ自宅を持つ．
+- 1000人の父親は，9:00に自宅からそれぞれの会社に移動する．
+- 1000人の父親は，17:00にそれぞれの自宅に移動する．
 - 毎時刻，父親がいる場所がグローバル共有変数に集計される．グローバル共有変数には「その時刻までにすべてのエージェントが自宅または職場にいた時間の総計」が記録されることになる．
 
 シミュレーション条件は以下の通りである．
@@ -219,8 +219,7 @@ public class TFatherRole extends TRole {
 
 - グローバル共有変数に初期値を設定する．
 - 集計ステージを定期実行ステージとして登録する．
-  - 定期実行ステージとして登録するには，ルール収集器のregisterAsPeriodicallyExecutedStageメソッドを利用する．
-  - 入力引数は，ステージ名，定期実行を開始するステップ数．定期実行のステップ間隔である．例えば，定期実行を開始するステップ数を0，定期実行のステップ間隔を1に設定すると，すべての時刻で実行される．
+  - 定期実行ステージとして登録するには，ルール収集器のmakeStageAlwaysExecutedメソッドを利用する．
 - 集計ステージを並列化ステージとして登録する．
 - グローバル共有変数のログ出力．
 
@@ -229,81 +228,80 @@ public class TFatherRole extends TRole {
 ```java
 public class TMain {
 
-    public static void main(String[] args) throws IOException {
-        // ログディレクトリへのパス
-        String logDir = "logs/sample10";
-        // ステージの初期化
-        List<String> stages = List.of(TStages.AGENT_MOVING, TStages.AGGREGATION); // ステージは，エージェント移動と集計．
-        // 乱数発生器
-        int interval = 60; // １ステップの分数
-        long seed = 0; // シード値
-        TModel model = new TModel(stages, interval, seed);
-        // 集計ステージを定期実行ステージとして登録
-        model.getRuleAggregator().makeStageAlwaysExecuted(TStages.AGGREGATION);
-        model.beginRuleLogger(logDir + File.separator + "ruleLog.csv");// ルールログを開始する．
-        // 初期値設定
-        model.getGlobalSharedVariableSet().put(TRuleOfAggregation.HOME_KEY, 0);
-        model.getGlobalSharedVariableSet().put(TRuleOfAggregation.WORKPLACE_KEY, 0);
-        // スポットの初期化
-        int noOfHomes = 100_000; // 家の数
-        int noOfCompany = 100; // 会社の数
-        TSpotManager spotManager = model.getSpotManager(); // スポット管理
-        spotManager.createSpots(TSpotTypes.HOME, noOfHomes); // noOfHomes個の家スポットを生成する．名前は，home1, home2, //
-                                                                // home3となる．
-        spotManager.createSpots(TSpotTypes.COMPANY, noOfCompany); // 1000個の会社スポットを生成する，名前は，company1, company2,
-                                                                    // company3 となる
-        // エージェントの初期化
-        TAgentManager agentManager = model.getAgentManager(); // エージェント管理
-        ArrayList<TAgent> fathers = agentManager.createAgents(TAgentTypes.FATHER, noOfHomes); // noOfHomes体の父親エージェントを生成する．
-        for (int i = 0; i < fathers.size(); ++i) {
-                TAgent father = fathers.get(i); // i番目のエージェントを取り出す．
-                String home = TSpotTypes.HOME + (i + 1); // i番目のエージェントの自宅のスポット名を生成する．
-                String workplace = TSpotTypes.COMPANY + ((i % noOfCompany) + 1);
-                TFatherRole fatherRole = new TFatherRole(father, home, workplace); // 父親役割を生成する．
-                father.activateRole(fatherRole.getName()); // 父親役割をアクティブ化する．
-                father.initializeCurrentSpot(spotManager.getSpotDB().get(home)); // 初期位置を自宅に設定する．
-        }
+        public static void main(String[] args) throws IOException {
+                // ログディレクトリへのパス
+                String logDir = "logs/sample10";
+                // ステージの初期化
+                List<String> stages = List.of(TStages.AGENT_MOVING, TStages.AGGREGATION); // ステージは，エージェント移動と集計．
+                // 乱数発生器
+                int interval = 60; // １ステップの分数
+                long seed = 0; // シード値
+                TModel model = new TModel(stages, interval, seed);
+                // 集計ステージを定期実行ステージとして登録
+                model.getRuleAggregator().makeStageAlwaysExecuted(TStages.AGGREGATION);
+                model.beginRuleLogger(logDir + File.separator + "ruleLog.csv");// ルールログを開始する．
+                // 初期値設定
+                model.getGlobalSharedVariableSet().put(TRuleOfAggregation.HOME_KEY, 0);
+                model.getGlobalSharedVariableSet().put(TRuleOfAggregation.WORKPLACE_KEY, 0);
+                // スポットの初期化
+                int noOfHomes = 1000; // 家の数
+                int noOfCompany = 10; // 会社の数
+                TSpotManager spotManager = model.getSpotManager(); // スポット管理
+                spotManager.createSpots(TSpotTypes.HOME, noOfHomes); // noOfHomes個の家スポットを生成する．名前は，home1, home2, //
+                                                                     // home3となる．
+                spotManager.createSpots(TSpotTypes.COMPANY, noOfCompany); // 10個の会社スポットを生成する，名前は，company1, company2,
+                                                                          // company3 となる
+                // エージェントの初期化
+                TAgentManager agentManager = model.getAgentManager(); // エージェント管理
+                ArrayList<TAgent> fathers = agentManager.createAgents(TAgentTypes.FATHER, noOfHomes); // noOfHomes体の父親エージェントを生成する．
+                for (int i = 0; i < fathers.size(); ++i) {
+                        TAgent father = fathers.get(i); // i番目のエージェントを取り出す．
+                        String home = TSpotTypes.HOME + (i + 1); // i番目のエージェントの自宅のスポット名を生成する．
+                        String workplace = TSpotTypes.COMPANY + ((i % noOfCompany) + 1);
+                        TFatherRole fatherRole = new TFatherRole(father, home, workplace); // 父親役割を生成する．
+                        father.activateRole(fatherRole.getName()); // 父親役割をアクティブ化する．
+                        father.initializeCurrentSpot(spotManager.getSpotDB().get(home)); // 初期位置を自宅に設定する．
+                }
 
-        // スポットログ用PrintWriter
-        PrintWriter printWriter = new PrintWriter(logDir + File.separator + "spotLog.csv");
-        printWriter.print("CurrentTime");
-        for (int i = 0; i < agentManager.getAgents().size(); i += 10) {
-                TAgent agent = agentManager.getAgents().get(i);
-                printWriter.print("," + agent.getName());
-        }
-        printWriter.println();
-
-        // グローバル共有変数のログ用PrintWriter
-        String pathOfGlobalSharedVariableSetLog = logDir + File.separator
-                        + "globalSharedVariableSetLog.csv";
-        PrintWriter globalSharedVariableSetLogPW = new PrintWriter(
-                        new BufferedWriter(new FileWriter(pathOfGlobalSharedVariableSetLog)));
-        globalSharedVariableSetLogPW.println("CurrentTime," +
-                        TRuleOfAggregation.HOME_KEY + "," +
-                        TRuleOfAggregation.WORKPLACE_KEY);
-
-        // メインループ： 0日0時0分から6日23時まで1時間単位でまわす．
-        TTime simulationPeriod = new TTime("7/0:00"); // シミュレーション終了時刻
-        while (model.getTime().isLessThan(simulationPeriod)) {
-                TTime currentTime = model.getTime();// 時刻を表示する．
-                printWriter.print(currentTime);
-                globalSharedVariableSetLogPW.print(currentTime);
-                model.execute();// モデルの実行
-                for (int i = 0; i < agentManager.getAgents().size(); i += 10) {
+                // スポットログ用PrintWriter
+                PrintWriter printWriter = new PrintWriter(logDir + File.separator + "spotLog.csv");
+                printWriter.print("CurrentTime");
+                for (int i = 0; i < agentManager.getAgents().size(); i++) {
                         TAgent agent = agentManager.getAgents().get(i);
-                        printWriter.print("," + agent.getCurrentSpotName());// 各エージェントが位置しているスポット名を表示する．
+                        printWriter.print("," + agent.getName());
                 }
                 printWriter.println();
-                // グローバル共有変数のログ出力
-                globalSharedVariableSetLogPW.println("," +
-                                model.getGlobalSharedVariableSet().get(TRuleOfAggregation.HOME_KEY) + "," +
-                                model.getGlobalSharedVariableSet().get(TRuleOfAggregation.WORKPLACE_KEY));
 
+                // グローバル共有変数のログ用PrintWriter
+                String pathOfGlobalSharedVariableSetLog = logDir + File.separator
+                                + "globalSharedVariableSetLog.csv";
+                PrintWriter globalSharedVariableSetLogPW = new PrintWriter(
+                                new BufferedWriter(new FileWriter(pathOfGlobalSharedVariableSetLog)));
+                globalSharedVariableSetLogPW.println("CurrentTime," +
+                                TRuleOfAggregation.HOME_KEY + "," +
+                                TRuleOfAggregation.WORKPLACE_KEY);
+
+                // メインループ： 0日0時0分から6日23時まで1時間単位でまわす．
+                TTime simulationPeriod = new TTime("7/0:00"); // シミュレーション終了時刻
+                while (model.getTime().isLessThan(simulationPeriod)) {
+                        TTime currentTime = model.getTime();// 時刻を表示する．
+                        printWriter.print(currentTime);
+                        globalSharedVariableSetLogPW.print(currentTime);
+                        model.execute();// モデルの実行
+                        for (int i = 0; i < agentManager.getAgents().size(); i++) {
+                                TAgent agent = agentManager.getAgents().get(i);
+                                printWriter.print("," + agent.getCurrentSpotName());// 各エージェントが位置しているスポット名を表示する．
+                        }
+                        printWriter.println();
+                        // グローバル共有変数のログ出力
+                        globalSharedVariableSetLogPW.println("," +
+                                        model.getGlobalSharedVariableSet().get(TRuleOfAggregation.HOME_KEY) + "," +
+                                        model.getGlobalSharedVariableSet().get(TRuleOfAggregation.WORKPLACE_KEY));
+
+                }
+                printWriter.close();// スポットログを終了する．
+                globalSharedVariableSetLogPW.close();
+                model.endRuleLogger();// ルールログを終了する．
         }
-        printWriter.close();// スポットログを終了する．
-        globalSharedVariableSetLogPW.close();
-        model.endRuleLogger();// ルールログを終了する．
-    }
 }
-
 ```
