@@ -32,12 +32,12 @@ public class TMain {
                 model.getGlobalSharedVariableSet().put(TRuleOfAggregation.HOME_KEY, 0);
                 model.getGlobalSharedVariableSet().put(TRuleOfAggregation.WORKPLACE_KEY, 0);
                 // スポットの初期化
-                int noOfHomes = 100_000; // 家の数
-                int noOfCompany = 100; // 会社の数
+                int noOfHomes = 1000; // 家の数
+                int noOfCompany = 10; // 会社の数
                 TSpotManager spotManager = model.getSpotManager(); // スポット管理
                 spotManager.createSpots(TSpotTypes.HOME, noOfHomes); // noOfHomes個の家スポットを生成する．名前は，home1, home2, //
                                                                      // home3となる．
-                spotManager.createSpots(TSpotTypes.COMPANY, noOfCompany); // 1000個の会社スポットを生成する，名前は，company1, company2,
+                spotManager.createSpots(TSpotTypes.COMPANY, noOfCompany); // 10個の会社スポットを生成する，名前は，company1, company2,
                                                                           // company3 となる
                 // エージェントの初期化
                 TAgentManager agentManager = model.getAgentManager(); // エージェント管理
@@ -54,7 +54,7 @@ public class TMain {
                 // スポットログ用PrintWriter
                 PrintWriter printWriter = new PrintWriter(logDir + File.separator + "spotLog.csv");
                 printWriter.print("CurrentTime");
-                for (int i = 0; i < agentManager.getAgents().size(); i += 10) {
+                for (int i = 0; i < agentManager.getAgents().size(); i++) {
                         TAgent agent = agentManager.getAgents().get(i);
                         printWriter.print("," + agent.getName());
                 }
@@ -76,7 +76,7 @@ public class TMain {
                         printWriter.print(currentTime);
                         globalSharedVariableSetLogPW.print(currentTime);
                         model.execute();// モデルの実行
-                        for (int i = 0; i < agentManager.getAgents().size(); i += 10) {
+                        for (int i = 0; i < agentManager.getAgents().size(); i++) {
                                 TAgent agent = agentManager.getAgents().get(i);
                                 printWriter.print("," + agent.getCurrentSpotName());// 各エージェントが位置しているスポット名を表示する．
                         }
