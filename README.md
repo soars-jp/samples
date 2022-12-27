@@ -79,7 +79,9 @@ git config --global user.email "hoge@hoge.jp"
 - [サンプル7：スポット・エージェントの動的追加・削除](./src/main/java/jp/soars/examples/sample07)
 - [サンプル8：列車への乗車（絶対時刻指定）](./src/main/java/jp/soars/examples/sample08)
 - [サンプル9：サンプル8の修正（列車への乗車の相対時刻指定）](./src/main/java/jp/soars/examples/sample09)
+- [サンプル10：サンプル1の拡張（定期実行ステージとグローバル共有変数の使用）](./src/main/java/jp/soars/examples/sample10)
 ## 履歴
+- 2022/12/19 sample10を作成した．
 - 2022/08/02 sample4の修正
 - 2022/07/22 soars-core220722_01に対応．station.csvにTypeカラムを追加．pom.xmlの更新．
 - 2022/03/23 sample4のバグを修正
